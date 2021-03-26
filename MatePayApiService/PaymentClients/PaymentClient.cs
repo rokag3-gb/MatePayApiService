@@ -8,5 +8,20 @@ namespace MatePayApiService.PaymentClients
         public string certFilePath { get; set; }
         public string logFilePath { get; set; }
         public int logLever { get; set; }
+
+        public void submitPayment()
+        {
+
+        }
+
+        public void cancelPayment()
+        {
+
+        }
+
+        public string issuePaymentKey()
+        {
+            
+        }
     }
 }
