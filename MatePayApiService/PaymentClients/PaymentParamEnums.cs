@@ -39,7 +39,7 @@ namespace MatePayApiService.PaymentClients
     {
         // 인증(암호 없이)
         public static string CERT_WITHOUT_PASSWORD = "0";
-        // 비인증(기본값)
+        // 비인증(기본값) 이 값 넣어서 결제 진행: 2021-01-14 KICC 이창준님 가이드
         public static string DEFAULT_NO_CERT = "1";
         // 구인증(미사용)
         public static string LEGACY_CERT = "2";

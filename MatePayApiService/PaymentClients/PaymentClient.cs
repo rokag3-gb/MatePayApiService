@@ -13,7 +13,6 @@ namespace MatePayApiService.PaymentClients
         private static string CURRENCY = "00"; // 통화코드 EX) 00=원
         private static string CARD_TRANSACTION_TYPE = "20"; // 처리종류 (20 : 승인 고정값)
         private static string PAYMENT_REQTYPE = "0"; // 카드결제종류 (0 : 일반 고정값)
-        private static string CERT_TYPE = "1"; // 인증여부 (1: 비인증) 2021-01-14 KICC 이창준님 가이드
         public bool useProduction { get; set; }
         private string paymentEndpointUrl => this.useProduction? "gw.easypay.co.kr" : "testgw.easypay.co.kr";
         private string paymentEndpointPort => "80";
@@ -113,42 +112,46 @@ namespace MatePayApiService.PaymentClients
 
             // 결제 실행
             string transactionResultData = Easypay.EP_CLI_COM__proc(TransactionCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
-            string resultCode = Easypay.EP_CLI_COM__get_value("res_cd");
-            string resultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
-            PaymentResults resultData = new PaymentResults {
-                transactionNumber = Easypay.EP_CLI_COM__get_value("cno"),                      // PG거래번호        (CA, CAO, CC, CCO, CPC)
-                totalPaymentAmount = Easypay.EP_CLI_COM__get_value("amount"),                // 총 결제금액       (CA,                  )
-                orderNumber = Easypay.EP_CLI_COM__get_value("order_no"),            // 주문번호          (CA,                  )
-                approvalNumber = Easypay.EP_CLI_COM__get_value("auth_no"),              // 승인번호          (CA,                  )
-                approvedAt = Easypay.EP_CLI_COM__get_value("tran_date"),          // 승인일시          (CA,      CC,      CPC)
-                wasEscrowUsed = Easypay.EP_CLI_COM__get_value("escrow_yn"),          // 에스크로 사용유무 (CA,                  )
-                isComplexPayment = Easypay.EP_CLI_COM__get_value("complex_yn"),        // 복합결제 유무     (CA,                  )
-                statusCode = Easypay.EP_CLI_COM__get_value("stat_cd"),              // 상태코드          (CA,      CC,      CPC)
-                statusMessage = Easypay.EP_CLI_COM__get_value("stat_msg"),            // 상태메시지        (CA,      CC,      CPC)
-                paymentType = Easypay.EP_CLI_COM__get_value("pay_type"),            // 결제수단          (CA,                  )
-                storeId = Easypay.EP_CLI_COM__get_value("mall_id"),              // 가맹점 Mall ID    (CA                   )
-                cardNumber = Easypay.EP_CLI_COM__get_value("card_no"),              // 카드번호          (CA,          CCO     )
-                cardIssuerCode = Easypay.EP_CLI_COM__get_value("issuer_cd"),          // 발급사코드        (CA,          CCO     )
-                cardIssuerName = Easypay.EP_CLI_COM__get_value("issuer_nm"),          // 발급사명          (CA,          CCO     )
-                cardAcquirerCode = Easypay.EP_CLI_COM__get_value("acquirer_cd"),      // 매입사코드        (CA,          CCO     )
-                cardAcquirerName = Easypay.EP_CLI_COM__get_value("acquirer_nm"),      // 매입사명          (CA,          CCO     )
-                cardInstallPeriod = Easypay.EP_CLI_COM__get_value("install_period"),// 할부개월          (CA,          CCO     )
-                isNoInterestPayment = Easypay.EP_CLI_COM__get_value("noint"),                  // 무이자여부        (CA                   )
-                canCancelPartitialy = Easypay.EP_CLI_COM__get_value("part_cancel_yn"),// 부분취소 가능여부 (CA                   )
-                cardKind = Easypay.EP_CLI_COM__get_value("card_gubun"),        // 신용카드 종류     (CA                   )
-                cardType = Easypay.EP_CLI_COM__get_value("card_biz_gubun"),// 신용카드 구분     (CA                   )
-                haveCouponsUsed = Easypay.EP_CLI_COM__get_value("cpon_flag"),          // 쿠폰 사용유무     (    CAO,     CCO     )
-                couponDiscountAmount = Easypay.EP_CLI_COM__get_value("used_cpon"),          // 쿠폰 사용금액     (    CAO              )
-                acquireCanceledAt = Easypay.EP_CLI_COM__get_value("canc_acq_date"),  // 매입취소일시      (                  CPC)
-                paymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date"),          // 취소일시          (CC,               CPC)
-                canceledTransactionNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno")
-            };
+            PaymentResults resultData = new PaymentResults(Easypay);
+            Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public void cancelPayment()
+        public PaymentResults cancelPayment(
+            string storeId,
+                string cancelType,
+                string transactionNumber,
+                string orderNumber,
+                string cancelAmount,
+                string requesterId,
+                string cancelReason
+            )
         {
+            /* -------------------------------------------------------------------------- */
+            /* ::: 변경관리 요청                                                            */
+            /* -------------------------------------------------------------------------- */
+            PaymentParamBuilder paymentParams = new PaymentParamBuilder();
+            paymentParams.StartSection("mgr_data");
+            paymentParams.Add("mgr_txtype", cancelType); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
+            paymentParams.Add("org_cno", transactionNumber);
+            paymentParams.Add("order_no", orderNumber);
+            paymentParams.Add("mgr_amt", cancelAmount);
+            paymentParams.Add("req_ip", this.GetIP());
+            paymentParams.Add("req_id", requesterId);
+            paymentParams.Add("mgr_msg", cancelReason);
 
+            // 결제 트랜젝션 초기화
+            KICCClass Easypay = new KICCClass();
+            Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
+
+            // 결제 데이터 설정
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
+
+            // 결제 실행
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TransactionCode.MODIFY_PAYMENT, storeId, this.GetIP(), orderNumber);
+            PaymentResults resultData = new PaymentResults(Easypay);
+            Easypay.EP_CLI_COM__cleanup();
+            return resultData;
         }
 
         public string issuePaymentKey()
