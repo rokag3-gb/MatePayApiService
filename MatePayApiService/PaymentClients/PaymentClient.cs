@@ -1,20 +1,19 @@
-using System;
 using EP_CLI_COMLib;
-using System.Collections.Generic;
+using System;
 using System.Net;
 
 namespace MatePayApiService.PaymentClients
 {
-    
-    
-    public class PaymentClient
+
+
+    public class PaymentClient : IPaymentClient
     {
         private static string WCC = "@"; // WCC (@ : 온라인 고정값)
         private static string CURRENCY = "00"; // 통화코드 EX) 00=원
         private static string CARD_TRANSACTION_TYPE = "20"; // 처리종류 (20 : 승인 고정값)
         private static string PAYMENT_REQTYPE = "0"; // 카드결제종류 (0 : 일반 고정값)
         public bool useProduction { get; set; }
-        private string paymentEndpointUrl => this.useProduction? "gw.easypay.co.kr" : "testgw.easypay.co.kr";
+        private string paymentEndpointUrl => this.useProduction ? "gw.easypay.co.kr" : "testgw.easypay.co.kr";
         private string paymentEndpointPort => "80";
         public string certFilePath { get; set; }
         public string logFilePath { get; set; }
@@ -49,7 +48,7 @@ namespace MatePayApiService.PaymentClients
             // 결제 공통 정보 DATA
             paymentParams.StartSection("common");
             paymentParams.Add("tot_amt", paymentAmount);
-            paymentParams.Add("currency", CURRENCY); 
+            paymentParams.Add("currency", CURRENCY);
             paymentParams.Add("client_ip", this.GetIP());
             //paymentParams.Add("cli_ver", client_version);
             //paymentParams.Add("req_cno", req_cno);
@@ -154,9 +153,9 @@ namespace MatePayApiService.PaymentClients
             return resultData;
         }
 
-        public string issuePaymentKey()
+        public void issuePaymentKey()
         {
-            
+
         }
 
         private string GetIP()

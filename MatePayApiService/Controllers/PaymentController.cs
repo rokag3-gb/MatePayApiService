@@ -4,23 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MatePayApiService.PaymentClients;
 
 namespace MatePayApiService.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class PaymentController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<PaymentController> _logger;
+        private readonly IPaymentClient _paymentClient;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public PaymentController(ILogger<PaymentController> logger, IPaymentClient paymentClient)
         {
             _logger = logger;
+            _paymentClient = paymentClient;
         }
 
         [HttpGet]

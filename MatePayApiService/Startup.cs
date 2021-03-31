@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MatePayApiService.PaymentClients;
 
 namespace MatePayApiService
 {
@@ -32,6 +33,10 @@ namespace MatePayApiService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MatePayApiService", Version = "v1" });
             });
+            services.AddScoped<IPaymentClient>(s => new PaymentClient(
+                Configuration["PaymentClient:CertFilePath"],
+                Configuration["PayemtnClient:LogFilePath"],
+                Configuration.GetValue<bool>("PaymentClient:UseProduction")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
