@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MatePayApiService.PaymentClients;
+using MatePayApiService.Data;
 
 namespace MatePayApiService.Controllers
 {
@@ -24,6 +25,18 @@ namespace MatePayApiService.Controllers
         {
             _logger = logger;
             _paymentClient = paymentClient;
+        }
+
+        [HttpPost]
+        public PaymentResults SubmitPayment(PaymentSubmission requestData)
+        {
+            return new PaymentResults();
+        }
+
+        [HttpPut]
+        public PaymentResults CancelPayment(PaymentCancelSubmission requestData)
+        {
+            return new PaymentResults();
         }
 
         [HttpGet]
