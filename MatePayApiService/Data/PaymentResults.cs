@@ -1,6 +1,6 @@
 ﻿using EP_CLI_COMLib;
 
-namespace MatePayApiService.PaymentClients
+namespace MatePayApiService.Data
 {
     public class PaymentResults
     {

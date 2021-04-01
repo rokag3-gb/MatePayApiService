@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MatePayApiService.PaymentClients;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Filters;
 
 namespace MatePayApiService
 {
@@ -32,6 +34,7 @@ namespace MatePayApiService
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MatePayApiService", Version = "v1" });
+                c.AddEnumsWithValuesFixFilters();
             });
             services.AddScoped<IPaymentClient>(s => new PaymentClient(
                 Configuration["PaymentClient:CertFilePath"],

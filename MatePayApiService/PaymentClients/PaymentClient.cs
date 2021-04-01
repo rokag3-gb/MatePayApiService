@@ -1,6 +1,7 @@
 using EP_CLI_COMLib;
 using System;
 using System.Net;
+using MatePayApiService.Data;
 
 namespace MatePayApiService.PaymentClients
 {
@@ -118,7 +119,7 @@ namespace MatePayApiService.PaymentClients
 
         public PaymentResults cancelPayment(
             string storeId,
-                string cancelType,
+                PaymentCancelOptions cancelType,
                 string transactionNumber,
                 string orderNumber,
                 string cancelAmount,
@@ -131,7 +132,7 @@ namespace MatePayApiService.PaymentClients
             /* -------------------------------------------------------------------------- */
             PaymentParamBuilder paymentParams = new PaymentParamBuilder();
             paymentParams.StartSection("mgr_data");
-            paymentParams.Add("mgr_txtype", cancelType); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
+            paymentParams.Add("mgr_txtype", cancelType.ToString()); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
             paymentParams.Add("org_cno", transactionNumber);
             paymentParams.Add("order_no", orderNumber);
             paymentParams.Add("mgr_amt", cancelAmount);

@@ -1,3 +1,4 @@
+using MatePayApiService.Data;
 namespace MatePayApiService.PaymentClients
 {
 
@@ -21,7 +22,7 @@ namespace MatePayApiService.PaymentClients
 
         PaymentResults cancelPayment(
             string storeId,
-                string cancelType,
+                PaymentCancelOptions cancelType,
                 string transactionNumber,
                 string orderNumber,
                 string cancelAmount,

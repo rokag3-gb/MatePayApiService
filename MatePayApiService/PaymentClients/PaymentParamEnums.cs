@@ -44,4 +44,11 @@ namespace MatePayApiService.PaymentClients
         // 구인증(미사용)
         public static string LEGACY_CERT = "2";
     }
+
+    public enum PaymentCancelOptions
+    {
+        CANCEL_IMMEDIATELY = 40, // 즉시 취소
+        CANCEL_ACQUIRE_PARTIALLY = 31, // 매입 부분 취소
+        CANCEL_PAYMENT_PARTIALLY = 32 // 승인 부분 취소
+    }
 }
