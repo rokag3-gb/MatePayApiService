@@ -111,7 +111,7 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TransactionCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
             PaymentResults resultData = new PaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
@@ -119,8 +119,8 @@ namespace MatePayApiService.PaymentClients
 
         public PaymentResults CancelPayment(
             string storeId,
-                PaymentCancelOptions cancelType,
-                string transactionNumber,
+                PaymentCancelOption cancelType,
+                string txNumber,
                 string orderNumber,
                 string cancelAmount,
                 string requesterId,
@@ -133,7 +133,7 @@ namespace MatePayApiService.PaymentClients
             PaymentParamBuilder paymentParams = new PaymentParamBuilder();
             paymentParams.StartSection("mgr_data");
             paymentParams.Add("mgr_txtype", cancelType.ToString()); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
-            paymentParams.Add("org_cno", transactionNumber);
+            paymentParams.Add("org_cno", txNumber);
             paymentParams.Add("order_no", orderNumber);
             paymentParams.Add("mgr_amt", cancelAmount);
             paymentParams.Add("req_ip", this.GetIP());
@@ -148,7 +148,7 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TransactionCode.MODIFY_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, storeId, this.GetIP(), orderNumber);
             PaymentResults resultData = new PaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;

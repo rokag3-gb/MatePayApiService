@@ -8,7 +8,7 @@ namespace MatePayApiService.Data
     {
         public string ResultCode { get; set; }
         public string ResultMessage { get; set; }
-        public string TransactionNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
+        public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
         public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
         public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
         public string ApprovalNumber { get; set; }               // 승인번호          (CA;                  )
@@ -33,14 +33,14 @@ namespace MatePayApiService.Data
         public string CouponDiscountAmount { get; set; }           // 쿠폰 사용금액     (    CAO              )
         public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
         public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
-        public string CanceledTransactionNumber { get; set; } // 취소된 PG 거래번호
+        public string CanceledTxNumber { get; set; } // 취소된 PG 거래번호
         public string ErrorMessage { get; set; } // 오류 메시지
         public PaymentResults() { }
         public PaymentResults(KICCClass Easypay)
         {
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
-            TransactionNumber = Easypay.EP_CLI_COM__get_value("cno");                      // PG거래번호        (CA; CAO; CC; CCO; CPC)
+            TxNumber = Easypay.EP_CLI_COM__get_value("cno");                      // PG거래번호        (CA; CAO; CC; CCO; CPC)
             TotalPaymentAmount = Easypay.EP_CLI_COM__get_value("amount");                // 총 결제금액       (CA;                  )
             OrderNumber = Easypay.EP_CLI_COM__get_value("order_no");            // 주문번호          (CA;                  )
             ApprovalNumber = Easypay.EP_CLI_COM__get_value("auth_no");              // 승인번호          (CA;                  )
@@ -65,7 +65,7 @@ namespace MatePayApiService.Data
             CouponDiscountAmount = Easypay.EP_CLI_COM__get_value("used_cpon");          // 쿠폰 사용금액     (    CAO              )
             AcquireCanceledAt = Easypay.EP_CLI_COM__get_value("canc_acq_date");  // 매입취소일시      (                  CPC)
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");          // 취소일시          (CC;               CPC)
-            CanceledTransactionNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno");
+            CanceledTxNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno");
         }
 
         public HttpStatusCode ResolveHttpStatusCodeFromResultCode()

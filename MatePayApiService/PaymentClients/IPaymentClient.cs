@@ -22,8 +22,8 @@ namespace MatePayApiService.PaymentClients
 
         PaymentResults CancelPayment(
             string storeId,
-                PaymentCancelOptions cancelType,
-                string transactionNumber,
+                PaymentCancelOption cancelType,
+                string txNumber,
                 string orderNumber,
                 string cancelAmount,
                 string requesterId,

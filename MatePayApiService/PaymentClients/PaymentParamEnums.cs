@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace MatePayApiService.PaymentClients
 {
     // 결제 처리 코드
-    public static class TransactionCode
+    public static class TxCode
     {
         // 승인
         public static string APPROVE_PAYMENT => "00101000";
@@ -45,7 +45,7 @@ namespace MatePayApiService.PaymentClients
         public static string LEGACY_CERT = "2";
     }
 
-    public enum PaymentCancelOptions
+    public enum PaymentCancelOption
     {
         CANCEL_IMMEDIATELY = 40, // 즉시 취소
         CANCEL_ACQUIRE_PARTIALLY = 31, // 매입 부분 취소

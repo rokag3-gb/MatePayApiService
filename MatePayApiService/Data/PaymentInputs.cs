@@ -38,9 +38,9 @@ namespace MatePayApiService.Data
         public string StoreId { get; set; }
         [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PaymentCancelOptions CancelType{ get; set; }
+        public PaymentCancelOption CancelType{ get; set; }
         [Required]
-        public string TransactionNumber{ get; set; }
+        public string TxNumber{ get; set; }
         [Required]
         public string OrderNumber{ get; set; }
         [Required]
