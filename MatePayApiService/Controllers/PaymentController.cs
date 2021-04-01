@@ -62,7 +62,7 @@ namespace MatePayApiService.Controllers
             PaymentResults result = _paymentClient.CancelPayment(
                 requestData.StoreId,
                 requestData.CancelType,
-                requestData.TransactionNumber,
+                requestData.TxNumber,
                 requestData.OrderNumber,
                 requestData.CancelAmount.ToString(),
                 requestData.RequesterId,

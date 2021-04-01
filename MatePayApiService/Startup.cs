@@ -38,7 +38,7 @@ namespace MatePayApiService
             });
             services.AddScoped<IPaymentClient>(s => new PaymentClient(
                 Configuration["PaymentClient:CertFilePath"],
-                Configuration["PayemtnClient:LogFilePath"],
+                Configuration["PaymentClient:LogFilePath"],
                 Configuration.GetValue<bool>("PaymentClient:UseProduction")));
         }
 
