@@ -14,6 +14,7 @@ namespace MatePayApiService.Data
         [Required]
         public string ConsumerName{ get; set; }
         [Required]
+        [EmailAddress]
         public string ConsumerEmail{ get; set; }
         [Required]
         public string ConsumerPhoneNumber{ get; set; }
@@ -28,7 +29,7 @@ namespace MatePayApiService.Data
         [Required]
         public string CardOwnerIdentifyCode{ get; set; }
         [Required]
-        public string PaymentAmount{ get; set; }
+        public int PaymentAmount{ get; set; }
     }
 
     public class PaymentCancelSubmission
@@ -37,11 +38,11 @@ namespace MatePayApiService.Data
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public PaymentCancelOptions CancelType{ get; set; }
         [Required]
-        public string RransactionNumber{ get; set; }
+        public string TransactionNumber{ get; set; }
         [Required]
         public string OrderNumber{ get; set; }
         [Required]
-        public string CancelAmount{ get; set; }
+        public int CancelAmount{ get; set; }
         [Required]
         public string RequesterId{ get; set; }
         [Required]

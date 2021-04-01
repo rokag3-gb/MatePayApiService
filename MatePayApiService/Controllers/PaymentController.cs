@@ -13,10 +13,6 @@ namespace MatePayApiService.Controllers
     [Route("[controller]")]
     public class PaymentController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
 
         private readonly ILogger<PaymentController> _logger;
         private readonly IPaymentClient _paymentClient;
@@ -30,8 +26,20 @@ namespace MatePayApiService.Controllers
         [HttpPost]
         public PaymentResults SubmitPayment(PaymentSubmission requestData)
         {
-            
-            return new PaymentResults();
+            PaymentResults result = _paymentClient.SubmitPayment(
+                requestData.StoreId,
+                requestData.OrderNumber,
+                requestData.ProductName,
+                requestData.ConsumerName,
+                requestData.ConsumerEmail,
+                requestData.ConsumerPhoneNumber,
+                requestData.CardNumber,
+                requestData.CardValidThru,
+                requestData.CardInstallPeriod,
+                requestData.CardPassword,
+                requestData.CardOwnerIdentifyCode,
+                requestData.PaymentAmount.ToString());
+            return result;
         }
 
         [HttpPut]

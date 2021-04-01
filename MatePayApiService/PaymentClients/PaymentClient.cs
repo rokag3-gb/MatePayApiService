@@ -28,7 +28,7 @@ namespace MatePayApiService.PaymentClients
             this.logLevel = 1;
         }
 
-        public PaymentResults submitPayment(
+        public PaymentResults SubmitPayment(
             string storeId,
             string orderNumber,
             string productName,
@@ -117,7 +117,7 @@ namespace MatePayApiService.PaymentClients
             return resultData;
         }
 
-        public PaymentResults cancelPayment(
+        public PaymentResults CancelPayment(
             string storeId,
                 PaymentCancelOptions cancelType,
                 string transactionNumber,

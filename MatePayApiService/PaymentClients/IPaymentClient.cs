@@ -5,7 +5,7 @@ namespace MatePayApiService.PaymentClients
 
     public interface IPaymentClient
     {
-        PaymentResults submitPayment(
+        PaymentResults SubmitPayment(
             string storeId,
             string orderNumber,
             string productName,
@@ -20,7 +20,7 @@ namespace MatePayApiService.PaymentClients
             string paymentAmount
             );
 
-        PaymentResults cancelPayment(
+        PaymentResults CancelPayment(
             string storeId,
                 PaymentCancelOptions cancelType,
                 string transactionNumber,
