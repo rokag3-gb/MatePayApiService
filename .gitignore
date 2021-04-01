@@ -35,3 +35,10 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+# Cert file
+*.pem
+log
+
+# cache
+.ionide
