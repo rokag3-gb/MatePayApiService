@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MatePayApiService.PaymentClients;
 using MatePayApiService.Data;
+using Microsoft.AspNetCore.Http;
 
 namespace MatePayApiService.Controllers
 {
     [ApiController]
+    [Produces("application/json")]
     [Route("[controller]")]
     public class PaymentController : ControllerBase
     {
@@ -24,7 +26,10 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPost]
-        public PaymentResults SubmitPayment(PaymentSubmission requestData)
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
+        public ActionResult<PaymentResults> SubmitPayment(PaymentSubmission requestData)
         {
             PaymentResults result = _paymentClient.SubmitPayment(
                 requestData.StoreId,
@@ -39,11 +44,20 @@ namespace MatePayApiService.Controllers
                 requestData.CardPassword,
                 requestData.CardOwnerIdentifyCode,
                 requestData.PaymentAmount.ToString());
-            return result;
+            switch(result.ResolveHttpStatusCodeFromResultCode())
+            {
+                case HttpStatusCode.OK: return Ok(result);
+                case HttpStatusCode.BadRequest: return BadRequest(result);
+                case HttpStatusCode.Unauthorized: return Unauthorized(result);
+                default: return BadRequest(result);
+            }
         }
 
         [HttpPut]
-        public PaymentResults CancelPayment(PaymentCancelSubmission requestData)
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
+        public ActionResult<PaymentResults> CancelPayment(PaymentCancelSubmission requestData)
         {
             PaymentResults result = _paymentClient.CancelPayment(
                 requestData.StoreId,
@@ -53,7 +67,13 @@ namespace MatePayApiService.Controllers
                 requestData.CancelAmount.ToString(),
                 requestData.RequesterId,
                 requestData.CancelReason);
-            return result;
+            switch (result.ResolveHttpStatusCodeFromResultCode())
+            {
+                case HttpStatusCode.OK: return Ok(result);
+                case HttpStatusCode.BadRequest: return BadRequest(result);
+                case HttpStatusCode.Unauthorized: return Unauthorized(result);
+                default: return BadRequest(result);
+            }
         }
     }
 }
