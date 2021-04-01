@@ -29,6 +29,8 @@ namespace MatePayApiService.Controllers
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status403Forbidden)]
         public ActionResult<PaymentResults> SubmitPayment(PaymentSubmission requestData)
         {
             PaymentResults result = _paymentClient.SubmitPayment(
@@ -44,19 +46,18 @@ namespace MatePayApiService.Controllers
                 requestData.CardPassword,
                 requestData.CardOwnerIdentifyCode,
                 requestData.PaymentAmount.ToString());
-            switch(result.ResolveHttpStatusCodeFromResultCode())
-            {
-                case HttpStatusCode.OK: return Ok(result);
-                case HttpStatusCode.BadRequest: return BadRequest(result);
-                case HttpStatusCode.Unauthorized: return Unauthorized(result);
-                default: return BadRequest(result);
-            }
+
+            ObjectResult response = new ObjectResult(result);
+            response.StatusCode = (int) result.ResolveHttpStatusCode();
+            return response;
         }
 
         [HttpPut]
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status403Forbidden)]
         public ActionResult<PaymentResults> CancelPayment(PaymentCancelSubmission requestData)
         {
             PaymentResults result = _paymentClient.CancelPayment(
@@ -67,13 +68,10 @@ namespace MatePayApiService.Controllers
                 requestData.CancelAmount.ToString(),
                 requestData.RequesterId,
                 requestData.CancelReason);
-            switch (result.ResolveHttpStatusCodeFromResultCode())
-            {
-                case HttpStatusCode.OK: return Ok(result);
-                case HttpStatusCode.BadRequest: return BadRequest(result);
-                case HttpStatusCode.Unauthorized: return Unauthorized(result);
-                default: return BadRequest(result);
-            }
+
+            ObjectResult response = new ObjectResult(result);
+            response.StatusCode = (int)result.ResolveHttpStatusCode();
+            return response;
         }
     }
 }

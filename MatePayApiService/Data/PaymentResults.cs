@@ -1,11 +1,12 @@
 ﻿using EP_CLI_COMLib;
-using System.Text.RegularExpressions;
 using System.Net;
+using System.Collections.Generic;
 
 namespace MatePayApiService.Data
 {
     public class PaymentResults
     {
+        public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
         public string ResultCode { get; set; }
         public string ResultMessage { get; set; }
         public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
@@ -67,22 +68,53 @@ namespace MatePayApiService.Data
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");          // 취소일시          (CC;               CPC)
             CanceledTxNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno");
         }
-
-        public HttpStatusCode ResolveHttpStatusCodeFromResultCode()
+        static PaymentResults()
         {
-            switch (this.ResultCode)
+            ResultCodeToHttpStatusCodeMap = new Dictionary<string, HttpStatusCode>();
+            string[] OkCode = { "0000" };
+            foreach (var item in OkCode)
             {
-                case var _ when Regex.IsMatch(this.ResultCode, @"000"):
-                    return HttpStatusCode.OK;
-                case var _ when Regex.IsMatch(this.ResultCode, @"[1-2][0-9]+"):
-                    return HttpStatusCode.BadRequest;
-                case var _ when Regex.IsMatch(this.ResultCode, @"[3][0-9]+"):
-                    return HttpStatusCode.Unauthorized;
-                case var _ when Regex.IsMatch(this.ResultCode, @"[4-9][0-9]+"):
-                    return HttpStatusCode.BadRequest;
-                default:
-                    return HttpStatusCode.BadRequest;
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.OK);
+            }
+
+            string[] BadRequestCodes = {
+                "W001",  "W101", "W102", "W103", "W104", "W105", "W106", "W107", "W108", "W109", "W110", "W111", "W112", "W113", "W114", "W115", "W116",
+                "W117", "W118", "W119", "W120", "W121", "W122", "W123", "W140", "W141", "W142", "W143", "W150", "W151", "W152", "W153", "W154", "W155",
+                "W156", "W157", "W158", "W159", "W170", "W171", "W172", "W200", "W201", "W210", "W211", "W212", "W213", "W214", "W215", "W216", "W217",
+                "W270", "W270", "W302", "W303", "W304", "W305", "W311", "W312", "W313", "W314", "W321", "W322", "W341", "W342", "W361",  "K101", "1001",
+                "2001", "9207",
+            };
+            foreach (var item in BadRequestCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.BadRequest);
+            }
+
+            string[] UnauthorizedCodes = { "W002", "W301", "W324", "W401", "0200", "W344", "K100", };
+            foreach (var item in UnauthorizedCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.Unauthorized);
+            }
+
+            string[] ForbiddenCodes = { "W230", "W231" };
+            foreach (var item in ForbiddenCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.Forbidden);
+            }
+
+            string[] InternalServerErrorCodes = {
+                "W240", "W250", "W251", "W252", "W253", "W254", "W255", "W256", "W323", "W325", "W331", "W332", "W343", "W345", "W351", "W352", "W501",
+                "W601", "3001", "3002", "9101", "9102", "9103", "9104", "9105", "9106", "9199", "9201", "9202", "9203", "9204", "9205", "9206", "9299",
+                "9999", "M101", "M102", "M103", "M104", "M201", "M202", "M203", "M204", "M205", "M206",
+            };
+            foreach (var item in InternalServerErrorCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.InternalServerError);
             }
         }
+        public HttpStatusCode ResolveHttpStatusCode()
+        {
+            return PaymentResults.ResultCodeToHttpStatusCodeMap[this.ResultCode];
+        }
     }
+
 }
