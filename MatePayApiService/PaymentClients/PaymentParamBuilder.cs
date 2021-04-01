@@ -14,15 +14,17 @@ namespace MatePayApiService.PaymentClients
         }
         public void StartSection(string sectionName)
         {
-            this.paramBuilder.Append(sectionName);
-            this.paramBuilder.Append("=");
+            if (!String.IsNullOrEmpty(sectionName))
+            {
+                this.paramBuilder.Append(sectionName + "=");
+            }
         }
         public void Add(string key, string value)
         {
-            this.paramBuilder.Append(key);
-            this.paramBuilder.Append("=");
-            this.paramBuilder.Append(value);
-            this.paramBuilder.Append(Convert.ToChar(31).ToString());
+            if (!String.IsNullOrEmpty(key) && !String.IsNullOrEmpty(value))
+            {
+                this.paramBuilder.Append($"{key}={value}{Convert.ToChar(31)}");
+            }
         }
         public void EndSection()
         {

@@ -57,7 +57,7 @@ namespace MatePayApiService.PaymentClients
             paymentParams.EndSection();
 
             // 신용카드 결제 DATA SET
-            paymentParams.Add("card", "");
+            paymentParams.StartSection("card");
             paymentParams.Add("card_txtype", CARD_TRANSACTION_TYPE);
             paymentParams.Add("req_type", PAYMENT_REQTYPE);
             paymentParams.Add("card_amt", paymentAmount);
@@ -82,7 +82,7 @@ namespace MatePayApiService.PaymentClients
             paymentParams.SplitSection();
 
             // 결제 주문 정보 DATA
-            paymentParams.Add("order_data", "");
+            paymentParams.StartSection("order_data");
             paymentParams.Add("order_no", orderNumber);
             //paymentParams.Add("memb_user_no", memb_user_no, );
             //paymentParams.Add("user_id", user_id, );
