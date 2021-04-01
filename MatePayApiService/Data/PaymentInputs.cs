@@ -35,6 +35,8 @@ namespace MatePayApiService.Data
     public class PaymentCancelSubmission
     {
         [Required]
+        public string StoreId { get; set; }
+        [Required]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public PaymentCancelOptions CancelType{ get; set; }
         [Required]

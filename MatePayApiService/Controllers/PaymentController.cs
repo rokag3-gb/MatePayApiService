@@ -45,7 +45,15 @@ namespace MatePayApiService.Controllers
         [HttpPut]
         public PaymentResults CancelPayment(PaymentCancelSubmission requestData)
         {
-            return new PaymentResults();
+            PaymentResults result = _paymentClient.CancelPayment(
+                requestData.StoreId,
+                requestData.CancelType,
+                requestData.TransactionNumber,
+                requestData.OrderNumber,
+                requestData.CancelAmount.ToString(),
+                requestData.RequesterId,
+                requestData.CancelReason);
+            return result;
         }
     }
 }
