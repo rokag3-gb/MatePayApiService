@@ -47,4 +47,7 @@ COPY --from=build C:/build/MatePayApiService/bin/Release/publish/ .
 COPY payment_com_libs/ep_cli_com.dll .
 RUN Start-Process -Wait regsvr32 -ArgumentList "C:/build/payment_com_libs/ep_cli_com.dll", "/s";
 
+EXPOSE 5000
+EXPOSE 5001
+
 ENTRYPOINT [ "MatePayApiService.exe" ]
