@@ -38,12 +38,12 @@ RUN msbuild \
     /p:PublishProfile=FolderProfile \
     /p:Configuration=Release 
 
-FROM mcr.microsoft.com/windows/nanoserver:20H2 AS runtime
+FROM mcr.microsoft.com/windows/servercore:20H2 AS runtime
 
-SHELL ["powershell"]
+SHELL ["powershell.exe", "-Command"]
 
 WORKDIR /app
-COPY --from=build C:/build/MatePayApiService/bin/Release/publish/ .
+COPY --from=build C:/build/MatePayApiService/bin/Release/net5.0/publish/ .
 COPY payment_com_libs/ep_cli_com.dll .
 RUN Start-Process -Wait regsvr32 -ArgumentList "ep_cli_com.dll", "/s";
 
