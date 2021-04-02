@@ -48,11 +48,12 @@ namespace MatePayApiService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MatePayApiService v1"));
             }
 
-            app.UseHttpsRedirection();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MatePayApiService v1"));
+
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
