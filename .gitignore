@@ -42,3 +42,4 @@ log
 
 # cache
 .ionide
+.fake
