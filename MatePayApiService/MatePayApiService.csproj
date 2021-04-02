@@ -4,6 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>ee5b923d-9b3c-4aa3-a173-ea8b08e5ca67</UserSecretsId>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+	  <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+    <Company>CLOUDMATE Corp</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
