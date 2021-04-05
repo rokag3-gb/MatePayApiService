@@ -33,7 +33,7 @@ stages:
         azureSubscription: '한영빈 MPN 구독 (2d004b00-3e0d-445a-b574-460960e923e9)'
         scriptType: 'ps'
         scriptLocation: 'inlineScript'
-        inlineScript: 'az acr build --registry $(containerRegistry) --image imageRepository:$(tag) .'
+        inlineScript: 'az acr build --registry $(containerRegistry) --image $(containerRegistry)/$(imageRepository):$(tag) .'
 
     # - task: Docker@2
     #   displayName: Build and push an image to container registry
