@@ -38,7 +38,7 @@ RUN msbuild \
     /p:PublishProfile=FolderProfile \
     /p:Configuration=Release 
 
-FROM mcr.microsoft.com/windows/servercore:2004 AS runtime
+FROM mcr.microsoft.com/windows/servercore:ltsc2019 AS runtime
 
 SHELL ["powershell.exe", "-Command"]
 
