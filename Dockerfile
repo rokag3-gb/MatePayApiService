@@ -51,4 +51,6 @@ RUN Start-Process -Wait regsvr32 -ArgumentList "ep_cli_com.dll", "/s";
 
 EXPOSE 5000 5001
 
+ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
+
 ENTRYPOINT [ "MatePayApiService.exe" ]
