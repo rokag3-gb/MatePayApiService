@@ -45,7 +45,8 @@ namespace MatePayApiService.Controllers
                 requestData.CardInstallPeriod,
                 requestData.CardPassword,
                 requestData.CardOwnerIdentifyCode,
-                requestData.PaymentAmount.ToString());
+                requestData.PaymentAmount.ToString(),
+                HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             response.StatusCode = (int) result.ResolveHttpStatusCode();
@@ -67,7 +68,8 @@ namespace MatePayApiService.Controllers
                 requestData.OrderNumber,
                 requestData.CancelAmount.ToString(),
                 requestData.RequesterId,
-                requestData.CancelReason);
+                requestData.CancelReason,
+                HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             response.StatusCode = (int)result.ResolveHttpStatusCode();

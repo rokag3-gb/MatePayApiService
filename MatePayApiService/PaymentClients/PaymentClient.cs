@@ -40,7 +40,8 @@ namespace MatePayApiService.PaymentClients
             string cardInstallPeriod,
             string cardPassword,
             string cardOwnerIdentifyCode,
-            string paymentAmount
+            string paymentAmount,
+            string remoteIPAddr
         )
         {
             PaymentParamBuilder paymentParams = new PaymentParamBuilder();
@@ -50,7 +51,7 @@ namespace MatePayApiService.PaymentClients
             paymentParams.StartSection("common");
             paymentParams.Add("tot_amt", paymentAmount);
             paymentParams.Add("currency", CURRENCY);
-            paymentParams.Add("client_ip", this.GetIP());
+            paymentParams.Add("client_ip", remoteIPAddr);
             //paymentParams.Add("cli_ver", client_version);
             //paymentParams.Add("req_cno", req_cno);
             //paymentParams.Add("join_cd", join_cd);
@@ -111,7 +112,7 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
             OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
@@ -124,7 +125,8 @@ namespace MatePayApiService.PaymentClients
                 string orderNumber,
                 string cancelAmount,
                 string requesterId,
-                string cancelReason
+                string cancelReason,
+                string remoteIPAddr
             )
         {
             /* -------------------------------------------------------------------------- */
@@ -136,7 +138,7 @@ namespace MatePayApiService.PaymentClients
             paymentParams.Add("org_cno", txNumber);
             paymentParams.Add("order_no", orderNumber);
             paymentParams.Add("mgr_amt", cancelAmount);
-            paymentParams.Add("req_ip", this.GetIP());
+            paymentParams.Add("req_ip", remoteIPAddr);
             paymentParams.Add("req_id", requesterId);
             paymentParams.Add("mgr_msg", cancelReason);
 
@@ -148,7 +150,7 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, storeId, remoteIPAddr, orderNumber);
             OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
@@ -159,7 +161,8 @@ namespace MatePayApiService.PaymentClients
             string orderNumber, 
             string traceNumber, 
             string encryptionKey, 
-            string encryptedRegistrationParams)
+            string encryptedRegistrationParams,
+            string remoteIPAddr)
         {
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
@@ -169,38 +172,10 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__set_enc_data(traceNumber, encryptionKey, encryptedRegistrationParams);
 
             // 결제 처리
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
             TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
-        }
-
-        private string GetIP()
-        {
-            string vIpInfo = "";
-
-            try
-            {
-                IPHostEntry hostEntry = Dns.GetHostByName(Dns.GetHostName());
-
-                for (int i = 0; i < hostEntry.AddressList.Length; i++)
-                {
-                    if (i == 0)
-                        vIpInfo = hostEntry.AddressList[i].ToString();
-                    else
-                        vIpInfo = vIpInfo + "," + hostEntry.AddressList[i].ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(Global.ErrMessageFilter(ex.Message), "실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                //Cursor.Current = Cursors.Default;
-            }
-
-            return vIpInfo;
         }
     }
 }

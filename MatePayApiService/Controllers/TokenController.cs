@@ -29,7 +29,8 @@ namespace MatePayApiService.Controllers
                 requestData.OrderNumber, 
                 requestData.TraceNumber, 
                 requestData.EncryptionKey, 
-                requestData.EncryptedRegistrationParams);
+                requestData.EncryptedRegistrationParams,
+                HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             // response.StatusCode = (int) result.ResolveHttpStatusCode();

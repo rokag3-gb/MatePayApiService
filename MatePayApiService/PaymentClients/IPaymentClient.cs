@@ -17,7 +17,8 @@ namespace MatePayApiService.PaymentClients
             string cardInstallPeriod,
             string cardPassword,
             string cardOwnerIdentifyCode,
-            string paymentAmount);
+            string paymentAmount,
+            string remoteIPAddr);
 
         OneTimePaymentResults CancelOneTimePayment(
             string storeId,
@@ -26,13 +27,15 @@ namespace MatePayApiService.PaymentClients
             string orderNumber,
             string cancelAmount,
             string requesterId,
-            string cancelReason);
+            string cancelReason,
+            string remoteIPAddr);
 
         TokenPaymentResult IssuePaymentToken(
             string storeId, 
             string orderNumber, 
             string traceNumber, 
             string encryptionKey, 
-            string encryptedRegistrationParams);
+            string encryptedRegistrationParams,
+            string remoteIPAddr);
     }
 }

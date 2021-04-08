@@ -40,15 +40,18 @@ RUN msbuild \
     /p:PublishProfile=FolderProfile \
     /p:Configuration=Release 
 
-FROM mcr.microsoft.com/windows/servercore:2004 AS runtime
+# FROM mcr.microsoft.com/windows/servercore:2004 AS runtime
+FROM mcr.microsoft.com/windows/nanoserver:2004 AS runtime
 
-SHELL ["powershell.exe", "-Command"]
+
+# SHELL ["powershell.exe", "-Command"]
 
 WORKDIR /app
 COPY --from=build C:/build/MatePayApiService/bin/Release/net5.0/publish/ .
-COPY payment_com_libs/ep_cli_com.dll .
-RUN Start-Process -Wait regsvr32 -ArgumentList "ep_cli_com.dll", "/s";
-
+COPY payment_com_libs/ep_cli64_com.dll .
+# RUN Start-Process -Wait regsvr32 -ArgumentList "ep_cli_com.dll", "/s";
+RUN C:\Windows\System32\regsvr32.exe /i C:\app\ep_cli64_com.dll
+ 
 EXPOSE 5000 5001
 
 ENV ASPNETCORE_URLS="http://0.0.0.0:5000"
