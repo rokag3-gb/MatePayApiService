@@ -28,7 +28,7 @@ namespace MatePayApiService.PaymentClients
             this.logLevel = 1;
         }
 
-        public PaymentResults SubmitPayment(
+        public OneTimePaymentResults SubmitPayment(
             string storeId,
             string orderNumber,
             string productName,
@@ -112,12 +112,12 @@ namespace MatePayApiService.PaymentClients
 
             // 결제 실행
             string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
-            PaymentResults resultData = new PaymentResults(Easypay);
+            OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public PaymentResults CancelPayment(
+        public OneTimePaymentResults CancelPayment(
             string storeId,
                 PaymentCancelOption cancelType,
                 string txNumber,
@@ -149,14 +149,27 @@ namespace MatePayApiService.PaymentClients
 
             // 결제 실행
             string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, storeId, this.GetIP(), orderNumber);
-            PaymentResults resultData = new PaymentResults(Easypay);
+            OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public void issuePaymentKey()
+        public void IssueSubscriptionKey(
+            string storeId, 
+            string orderNumber, 
+            string traceNumber, 
+            string encryptionKey, 
+            string encryptedSubscribeParams)
         {
+            // 결제 트랜젝션 초기화
+            KICCClass Easypay = new KICCClass();
+            Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
+            // 결제 데이터 설정
+            Easypay.EP_CLI_COM__set_enc_data(traceNumber, encryptionKey, encryptedSubscribeParams);
+
+            // 결제 처리
+            Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
         }
 
         private string GetIP()
