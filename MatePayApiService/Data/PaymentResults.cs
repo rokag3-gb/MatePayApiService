@@ -1,40 +1,70 @@
 ﻿using EP_CLI_COMLib;
 using System.Net;
 using System.Collections.Generic;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace MatePayApiService.Data
 {
     public class OneTimePaymentResults
     {
         public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
+        [SwaggerSchema("결제 결과 응답코드")]
         public string ResultCode { get; set; }
+        [SwaggerSchema("결제 결과 응답 메시지")]
         public string ResultMessage { get; set; }
+        [SwaggerSchema("PG거래번호")]
         public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
+        [SwaggerSchema("총 결제금액")]
         public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
+        [SwaggerSchema("주문번호")]
         public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
+        [SwaggerSchema("승인번호")]
         public string ApprovalNumber { get; set; }               // 승인번호          (CA;                  )
+        [SwaggerSchema("승인일시")]
         public string ApprovedAt { get; set; }           // 승인일시          (CA;      CC;      CPC)
+        [SwaggerSchema("에스크로 사용유무")]
         public string WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
+        [SwaggerSchema("복합결제 유무")]
         public string IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
+        [SwaggerSchema("상태코드")]
         public string StatusCode { get; set; }               // 상태코드          (CA;      CC;      CPC)
+        [SwaggerSchema("상태메시지")]
         public string StatusMessage { get; set; }             // 상태메시지        (CA;      CC;      CPC)
+        [SwaggerSchema("결제수단")]
         public string PaymentType { get; set; }             // 결제수단          (CA;                  )
+        [SwaggerSchema("가맹점 ID")]
         public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
+        [SwaggerSchema("카드번호")]
         public string CardNumber { get; set; }               // 카드번호          (CA;          CCO     )
+        [SwaggerSchema("발급사코드")]
         public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
+        [SwaggerSchema("발급사명")]
         public string CardIssuerName { get; set; }           // 발급사명          (CA;          CCO     )
+        [SwaggerSchema("매입사코드")]
         public string CardAcquirerCode { get; set; }       // 매입사코드        (CA;          CCO     )
+        [SwaggerSchema("매입사명")]
         public string CardAcquirerName { get; set; }       // 매입사명          (CA;          CCO     )
+        [SwaggerSchema("할부개월")]
         public string CardInstallPeriod { get; set; } // 할부개월          (CA;          CCO     )
+        [SwaggerSchema("무이자여부")]
         public string IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
+        [SwaggerSchema("부분취소 가능여부")]
         public string CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
+        [SwaggerSchema("신용카드 종류")]
         public string CardKind { get; set; }         // 신용카드 종류     (CA                   )
+        [SwaggerSchema("신용카드 구분")]
         public string CardType { get; set; } // 신용카드 구분     (CA                   )
+        [SwaggerSchema("쿠폰 사용유무")]
         public string HaveCouponsUsed { get; set; }           // 쿠폰 사용유무     (    CAO;     CCO     )
+        [SwaggerSchema("쿠폰 사용금액")]
         public string CouponDiscountAmount { get; set; }           // 쿠폰 사용금액     (    CAO              )
+        [SwaggerSchema("매입 취소 일시")]
         public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
+        [SwaggerSchema("취소일시")]
         public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
+        [SwaggerSchema("취소된 PG 거래번호")]
         public string CanceledTxNumber { get; set; } // 취소된 PG 거래번호
+        [SwaggerSchema("오류 메시지")]
         public string ErrorMessage { get; set; } // 오류 메시지
         public OneTimePaymentResults() { }
         public OneTimePaymentResults(KICCClass Easypay)
@@ -120,32 +150,59 @@ namespace MatePayApiService.Data
     public class SubscriptionPaymentResult
     {
         public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
+        [SwaggerSchema("결제 결과 응답코드")]
         public string ResultCode { get; set; }
+        [SwaggerSchema("결제 결과 응답 메시지")]
         public string ResultMessage { get; set; }
+        [SwaggerSchema("PG거래번호")]
         public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
+        [SwaggerSchema("총 결제금액")]
         public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
+        [SwaggerSchema("주문번호")]
         public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
+        [SwaggerSchema("승인번호")]
         public string ApprovalNumber { get; set; }               // 승인번호          (CA;                  )
+        [SwaggerSchema("승인일시")]
         public string ApprovedAt { get; set; }           // 승인일시          (CA;      CC;      CPC)
+        [SwaggerSchema("에스크로 사용유무")]
         public string WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
+        [SwaggerSchema("복합결제 유무")]
         public string IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
+        [SwaggerSchema("상태코드")]
         public string StatusCode { get; set; }               // 상태코드          (CA;      CC;      CPC)
+        [SwaggerSchema("상태메시지")]
         public string StatusMessage { get; set; }             // 상태메시지        (CA;      CC;      CPC)
+        [SwaggerSchema("결제수단")]
         public string PaymentType { get; set; }             // 결제수단          (CA;                  )
+        [SwaggerSchema("가맹점 ID")]
         public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
+        [SwaggerSchema("카드번호")]
         public string CardNumber { get; set; }               // 카드번호          (CA;          CCO     )
+        [SwaggerSchema("발급사코드")]
         public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
+        [SwaggerSchema("발급사명")]
         public string CardIssuerName { get; set; }           // 발급사명          (CA;          CCO     )
+        [SwaggerSchema("매입사코드")]
         public string CardAcquirerCode { get; set; }       // 매입사코드        (CA;          CCO     )
+        [SwaggerSchema("매입사명")]
         public string CardAcquirerName { get; set; }       // 매입사명          (CA;          CCO     )
+        [SwaggerSchema("할부개월")]
         public string CardInstallPeriod { get; set; } // 할부개월          (CA;          CCO     )
+        [SwaggerSchema("무이자여부")]
         public string IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
+        [SwaggerSchema("부분취소")]
         public string CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
+        [SwaggerSchema("신용카드 종류")]
         public string CardKind { get; set; }         // 신용카드 종류     (CA                   )
+        [SwaggerSchema("신용카드 구분")]
         public string CardType { get; set; } // 신용카드 구분     (CA                   )
-        public string IsCartPayment { get; set; }
+        [SwaggerSchema("장바구니")]
+        public string IsCartPayment { get; set; } // 장바구니 결제 여부
+        [SwaggerSchema("매입 취소 일시")]
         public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
+        [SwaggerSchema("취소일시")]
         public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
-        public string RefundScheduledAt { get; set; }
+        [SwaggerSchema("환불 예정 일시")]
+        public string RefundScheduledAt { get; set; } // 환불예정일시
     }
 }
