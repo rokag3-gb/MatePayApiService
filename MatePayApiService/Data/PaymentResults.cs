@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MatePayApiService.Data
 {
-    public class PaymentResults
+    public class OneTimePaymentResults
     {
         public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
         public string ResultCode { get; set; }
@@ -36,8 +36,8 @@ namespace MatePayApiService.Data
         public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
         public string CanceledTxNumber { get; set; } // 취소된 PG 거래번호
         public string ErrorMessage { get; set; } // 오류 메시지
-        public PaymentResults() { }
-        public PaymentResults(KICCClass Easypay)
+        public OneTimePaymentResults() { }
+        public OneTimePaymentResults(KICCClass Easypay)
         {
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
@@ -68,7 +68,7 @@ namespace MatePayApiService.Data
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");          // 취소일시          (CC;               CPC)
             CanceledTxNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno");
         }
-        static PaymentResults()
+        static OneTimePaymentResults()
         {
             ResultCodeToHttpStatusCodeMap = new Dictionary<string, HttpStatusCode>();
             string[] OkCode = { "0000" };
@@ -113,8 +113,39 @@ namespace MatePayApiService.Data
         }
         public HttpStatusCode ResolveHttpStatusCode()
         {
-            return PaymentResults.ResultCodeToHttpStatusCodeMap[this.ResultCode];
+            return OneTimePaymentResults.ResultCodeToHttpStatusCodeMap[this.ResultCode];
         }
     }
 
+    public class SubscriptionPaymentResult
+    {
+        public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
+        public string ResultCode { get; set; }
+        public string ResultMessage { get; set; }
+        public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
+        public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
+        public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
+        public string ApprovalNumber { get; set; }               // 승인번호          (CA;                  )
+        public string ApprovedAt { get; set; }           // 승인일시          (CA;      CC;      CPC)
+        public string WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
+        public string IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
+        public string StatusCode { get; set; }               // 상태코드          (CA;      CC;      CPC)
+        public string StatusMessage { get; set; }             // 상태메시지        (CA;      CC;      CPC)
+        public string PaymentType { get; set; }             // 결제수단          (CA;                  )
+        public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
+        public string CardNumber { get; set; }               // 카드번호          (CA;          CCO     )
+        public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
+        public string CardIssuerName { get; set; }           // 발급사명          (CA;          CCO     )
+        public string CardAcquirerCode { get; set; }       // 매입사코드        (CA;          CCO     )
+        public string CardAcquirerName { get; set; }       // 매입사명          (CA;          CCO     )
+        public string CardInstallPeriod { get; set; } // 할부개월          (CA;          CCO     )
+        public string IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
+        public string CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
+        public string CardKind { get; set; }         // 신용카드 종류     (CA                   )
+        public string CardType { get; set; } // 신용카드 구분     (CA                   )
+        public string IsCartPayment { get; set; }
+        public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
+        public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
+        public string RefundScheduledAt { get; set; }
+    }
 }
