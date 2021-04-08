@@ -1,7 +1,7 @@
 ﻿using EP_CLI_COMLib;
-using System.Net;
-using System.Collections.Generic;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
+using System.Net;
 
 namespace MatePayApiService.Data
 {
@@ -143,7 +143,7 @@ namespace MatePayApiService.Data
         }
         public HttpStatusCode ResolveHttpStatusCode()
         {
-            return OneTimePaymentResults.ResultCodeToHttpStatusCodeMap[this.ResultCode];
+            return OneTimePaymentResults.ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -176,7 +176,7 @@ namespace MatePayApiService.Data
         public string PaymentType { get; set; }             // 결제수단          (CA;                  )
         [SwaggerSchema("가맹점 ID")]
         public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
-        [SwaggerSchema("카드번호")]
+        [SwaggerSchema("카드번호(정기결제 키)")]
         public string CardNumber { get; set; }               // 카드번호          (CA;          CCO     )
         [SwaggerSchema("발급사코드")]
         public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
@@ -204,5 +204,37 @@ namespace MatePayApiService.Data
         public string PaymentCanceledAt { get; set; }           // 취소일시          (CC;               CPC)
         [SwaggerSchema("환불 예정 일시")]
         public string RefundScheduledAt { get; set; } // 환불예정일시
+
+        public SubscriptionPaymentResult() { }
+        public SubscriptionPaymentResult(KICCClass Easypay)
+        {
+            ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
+            ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
+            TxNumber = Easypay.EP_CLI_COM__get_value("cno");
+            TotalPaymentAmount = Easypay.EP_CLI_COM__get_value("amount");
+            OrderNumber = Easypay.EP_CLI_COM__get_value("order_no");
+            ApprovalNumber = Easypay.EP_CLI_COM__get_value("auth_no");
+            ApprovedAt = Easypay.EP_CLI_COM__get_value("tran_date");
+            WasEscrowUsed = Easypay.EP_CLI_COM__get_value("escrow_yn");
+            IsComplexPayment = Easypay.EP_CLI_COM__get_value("complex_yn");
+            StatusCode = Easypay.EP_CLI_COM__get_value("stat_cd");
+            StatusMessage = Easypay.EP_CLI_COM__get_value("stat_msg");
+            PaymentType = Easypay.EP_CLI_COM__get_value("pay_type");
+            StoreId = Easypay.EP_CLI_COM__get_value("memb_id");
+            CardNumber = Easypay.EP_CLI_COM__get_value("card_no");
+            CardIssuerCode = Easypay.EP_CLI_COM__get_value("issuer_cd");
+            CardIssuerName = Easypay.EP_CLI_COM__get_value("issuer_nm");
+            CardAcquirerCode = Easypay.EP_CLI_COM__get_value("acquirer_cd");
+            CardAcquirerName = Easypay.EP_CLI_COM__get_value("acquirer_nm");
+            CardInstallPeriod = Easypay.EP_CLI_COM__get_value("install_period");
+            IsNoInterestPayment = Easypay.EP_CLI_COM__get_value("noint");
+            CanCancelPartitialy = Easypay.EP_CLI_COM__get_value("part_cancel_yn");
+            CardKind = Easypay.EP_CLI_COM__get_value("card_gubun");
+            CardType = Easypay.EP_CLI_COM__get_value("card_biz_gubun");
+            IsCartPayment = Easypay.EP_CLI_COM__get_value("bk_pay_yn");
+            AcquireCanceledAt = Easypay.EP_CLI_COM__get_value("canc_acq_date");
+            PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");
+            RefundScheduledAt = Easypay.EP_CLI_COM__get_value("refund_date");
+        }
     }
 }
