@@ -47,8 +47,13 @@ namespace MatePayApiService.PaymentClients
 
     public enum PaymentCancelOption
     {
-        CANCEL_IMMEDIATELY = 40, // 즉시 취소
-        CANCEL_ACQUIRE_PARTIALLY = 31, // 매입 부분 취소
-        CANCEL_PAYMENT_PARTIALLY = 32 // 승인 부분 취소
+        ACQUIRE = 20, // 매입
+        CANCEL_CARD_PAYMENT_IMMEDIATELY = 40, // 카드 즉시 취소 (매입/승인 자동판단)
+        CANCEL_CARD_ACQUIRE_PARTIALLY = 31, // 카드 매입 부분 취소
+        CANCEL_CARD_PAYMENT_PARTIALLY = 32, // 카드 승인 부분 취소
+        CANCEL_BANK_DEPOSIT_PARTIALLY = 33, // 계좌이체 부분취소
+        REFUND_VIRT_DEPOSIT_ENTIRELY = 60, // 가상계좌 전체환불
+        REFUND_VIRT_DEPOSIT_PARTIALLY = 62 // 가상계좌 부분환불
+
     }
 }

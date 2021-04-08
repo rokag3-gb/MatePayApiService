@@ -134,13 +134,14 @@ namespace MatePayApiService.PaymentClients
             /* -------------------------------------------------------------------------- */
             PaymentParamBuilder paymentParams = new PaymentParamBuilder();
             paymentParams.StartSection("mgr_data");
-            paymentParams.Add("mgr_txtype", cancelType.ToString()); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
+            paymentParams.Add("mgr_txtype", cancelType.ToString("D")); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
             paymentParams.Add("org_cno", txNumber);
             paymentParams.Add("order_no", orderNumber);
             paymentParams.Add("mgr_amt", cancelAmount);
             paymentParams.Add("req_ip", remoteIPAddr);
             paymentParams.Add("req_id", requesterId);
             paymentParams.Add("mgr_msg", cancelReason);
+            paymentParams.SplitSection();
 
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
