@@ -35,6 +35,7 @@ namespace MatePayApiService
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MatePayApiService", Version = "v1" });
                 c.AddEnumsWithValuesFixFilters();
+                c.EnableAnnotations();
             });
             services.AddScoped<IPaymentClient>(s => new PaymentClient(
                 Configuration["PaymentClient:CertFilePath"],
