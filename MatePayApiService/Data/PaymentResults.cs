@@ -147,7 +147,7 @@ namespace MatePayApiService.Data
         }
     }
 
-    public class SubscriptionPaymentResult
+    public class TokenPaymentResult
     {
         public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
         [SwaggerSchema("결제 결과 응답코드")]
@@ -177,7 +177,7 @@ namespace MatePayApiService.Data
         [SwaggerSchema("가맹점 ID")]
         public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
         [SwaggerSchema("카드번호(정기결제 키)")]
-        public string CardNumber { get; set; }               // 카드번호          (CA;          CCO     )
+        public string PaymentToken { get; set; }               // 카드번호          (CA;          CCO     )
         [SwaggerSchema("발급사코드")]
         public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
         [SwaggerSchema("발급사명")]
@@ -205,8 +205,8 @@ namespace MatePayApiService.Data
         [SwaggerSchema("환불 예정 일시")]
         public string RefundScheduledAt { get; set; } // 환불예정일시
 
-        public SubscriptionPaymentResult() { }
-        public SubscriptionPaymentResult(KICCClass Easypay)
+        public TokenPaymentResult() { }
+        public TokenPaymentResult(KICCClass Easypay)
         {
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
@@ -221,7 +221,7 @@ namespace MatePayApiService.Data
             StatusMessage = Easypay.EP_CLI_COM__get_value("stat_msg");
             PaymentType = Easypay.EP_CLI_COM__get_value("pay_type");
             StoreId = Easypay.EP_CLI_COM__get_value("memb_id");
-            CardNumber = Easypay.EP_CLI_COM__get_value("card_no");
+            PaymentToken = Easypay.EP_CLI_COM__get_value("card_no");
             CardIssuerCode = Easypay.EP_CLI_COM__get_value("issuer_cd");
             CardIssuerName = Easypay.EP_CLI_COM__get_value("issuer_nm");
             CardAcquirerCode = Easypay.EP_CLI_COM__get_value("acquirer_cd");

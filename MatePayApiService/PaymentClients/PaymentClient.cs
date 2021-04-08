@@ -28,7 +28,7 @@ namespace MatePayApiService.PaymentClients
             this.logLevel = 1;
         }
 
-        public OneTimePaymentResults SubmitPayment(
+        public OneTimePaymentResults ProcessOneTimePayment(
             string storeId,
             string orderNumber,
             string productName,
@@ -117,7 +117,7 @@ namespace MatePayApiService.PaymentClients
             return resultData;
         }
 
-        public OneTimePaymentResults CancelPayment(
+        public OneTimePaymentResults CancelOneTimePayment(
             string storeId,
                 PaymentCancelOption cancelType,
                 string txNumber,
@@ -154,22 +154,25 @@ namespace MatePayApiService.PaymentClients
             return resultData;
         }
 
-        public void IssueSubscriptionKey(
+        public TokenPaymentResult IssuePaymentToken(
             string storeId, 
             string orderNumber, 
             string traceNumber, 
             string encryptionKey, 
-            string encryptedSubscribeParams)
+            string encryptedRegistrationParams)
         {
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_enc_data(traceNumber, encryptionKey, encryptedSubscribeParams);
+            Easypay.EP_CLI_COM__set_enc_data(traceNumber, encryptionKey, encryptedRegistrationParams);
 
             // 결제 처리
-            Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, this.GetIP(), orderNumber);
+            TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
+            Easypay.EP_CLI_COM__cleanup();
+            return resultData;
         }
 
         private string GetIP()

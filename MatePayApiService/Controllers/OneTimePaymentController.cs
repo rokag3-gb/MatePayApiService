@@ -12,14 +12,14 @@ namespace MatePayApiService.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("[controller]")]
-    public class PaymentController : ControllerBase
+    [Route("pay/onetime")]
+    public class OneTimePaymentController : ControllerBase
     {
 
-        private readonly ILogger<PaymentController> _logger;
+        private readonly ILogger<OneTimePaymentController> _logger;
         private readonly IPaymentClient _paymentClient;
 
-        public PaymentController(ILogger<PaymentController> logger, IPaymentClient paymentClient)
+        public OneTimePaymentController(ILogger<OneTimePaymentController> logger, IPaymentClient paymentClient)
         {
             _logger = logger;
             _paymentClient = paymentClient;
@@ -31,9 +31,9 @@ namespace MatePayApiService.Controllers
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
-        public ActionResult<OneTimePaymentResults> SubmitPayment(PaymentSubmission requestData)
+        public ActionResult<OneTimePaymentResults> Process(NewOneTimePaymentInput requestData)
         {
-            OneTimePaymentResults result = _paymentClient.SubmitPayment(
+            OneTimePaymentResults result = _paymentClient.ProcessOneTimePayment(
                 requestData.StoreId,
                 requestData.OrderNumber,
                 requestData.ProductName,
@@ -58,9 +58,9 @@ namespace MatePayApiService.Controllers
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
-        public ActionResult<OneTimePaymentResults> CancelPayment(PaymentCancelSubmission requestData)
+        public ActionResult<OneTimePaymentResults> Cancel(CancelOneTimePaymentInput requestData)
         {
-            OneTimePaymentResults result = _paymentClient.CancelPayment(
+            OneTimePaymentResults result = _paymentClient.CancelOneTimePayment(
                 requestData.StoreId,
                 requestData.CancelType,
                 requestData.TxNumber,

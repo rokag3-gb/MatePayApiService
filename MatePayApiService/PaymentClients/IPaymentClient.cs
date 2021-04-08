@@ -5,7 +5,7 @@ namespace MatePayApiService.PaymentClients
 
     public interface IPaymentClient
     {
-        OneTimePaymentResults SubmitPayment(
+        OneTimePaymentResults ProcessOneTimePayment(
             string storeId,
             string orderNumber,
             string productName,
@@ -17,17 +17,22 @@ namespace MatePayApiService.PaymentClients
             string cardInstallPeriod,
             string cardPassword,
             string cardOwnerIdentifyCode,
-            string paymentAmount
-            );
+            string paymentAmount);
 
-        OneTimePaymentResults CancelPayment(
+        OneTimePaymentResults CancelOneTimePayment(
             string storeId,
-                PaymentCancelOption cancelType,
-                string txNumber,
-                string orderNumber,
-                string cancelAmount,
-                string requesterId,
-                string cancelReason
-            );
+            PaymentCancelOption cancelType,
+            string txNumber,
+            string orderNumber,
+            string cancelAmount,
+            string requesterId,
+            string cancelReason);
+
+        TokenPaymentResult IssuePaymentToken(
+            string storeId, 
+            string orderNumber, 
+            string traceNumber, 
+            string encryptionKey, 
+            string encryptedRegistrationParams);
     }
 }

@@ -3,7 +3,7 @@ using MatePayApiService.PaymentClients;
 using System.Text.Json.Serialization;
 namespace MatePayApiService.Data
 {
-    public class PaymentSubmission
+    public class NewOneTimePaymentInput
     {
         [Required]
         public string StoreId{ get; set; }
@@ -32,7 +32,7 @@ namespace MatePayApiService.Data
         public int PaymentAmount{ get; set; }
     }
 
-    public class PaymentCancelSubmission
+    public class CancelOneTimePaymentInput
     {
         [Required]
         public string StoreId { get; set; }
@@ -49,5 +49,19 @@ namespace MatePayApiService.Data
         public string RequesterId{ get; set; }
         [Required]
         public string CancelReason{ get; set; }
+    }
+
+    public class IssuePaymentTokenInput
+    {
+        [Required]
+        public string StoreId{ get; set; }
+        [Required]
+        public string OrderNumber{ get; set; }
+        [Required]
+        public string TraceNumber{ get; set; }
+        [Required]
+        public string EncryptionKey{ get; set; }
+        [Required]
+        public string EncryptedRegistrationParams{ get; set; }
     }
 }
