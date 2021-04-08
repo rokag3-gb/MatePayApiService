@@ -26,14 +26,14 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status403Forbidden)]
-        public ActionResult<PaymentResults> SubmitPayment(PaymentSubmission requestData)
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
+        public ActionResult<OneTimePaymentResults> SubmitPayment(PaymentSubmission requestData)
         {
-            PaymentResults result = _paymentClient.SubmitPayment(
+            OneTimePaymentResults result = _paymentClient.SubmitPayment(
                 requestData.StoreId,
                 requestData.OrderNumber,
                 requestData.ProductName,
@@ -53,14 +53,14 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPut]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(typeof(PaymentResults), StatusCodes.Status403Forbidden)]
-        public ActionResult<PaymentResults> CancelPayment(PaymentCancelSubmission requestData)
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
+        public ActionResult<OneTimePaymentResults> CancelPayment(PaymentCancelSubmission requestData)
         {
-            PaymentResults result = _paymentClient.CancelPayment(
+            OneTimePaymentResults result = _paymentClient.CancelPayment(
                 requestData.StoreId,
                 requestData.CancelType,
                 requestData.TxNumber,
