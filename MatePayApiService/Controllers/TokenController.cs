@@ -28,7 +28,7 @@ namespace MatePayApiService.Controllers
                 requestData.StoreId, 
                 requestData.OrderNumber, 
                 requestData.TraceNumber, 
-                requestData.EncryptionKey, 
+                requestData.SessionKey, 
                 requestData.EncryptedRegistrationParams,
                 HttpContext.Connection.RemoteIpAddress.ToString());
 

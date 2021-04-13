@@ -60,7 +60,7 @@ namespace MatePayApiService.Data
         [Required]
         public string TraceNumber{ get; set; }
         [Required]
-        public string EncryptionKey{ get; set; }
+        public string SessionKey{ get; set; }
         [Required]
         public string EncryptedRegistrationParams{ get; set; }
     }
