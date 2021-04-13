@@ -176,7 +176,7 @@ namespace MatePayApiService.Data
         public string PaymentType { get; set; }             // 결제수단          (CA;                  )
         [SwaggerSchema("가맹점 ID")]
         public string StoreId { get; set; }               // 가맹점 Mall ID    (CA                   )
-        [SwaggerSchema("카드번호(정기결제 키)")]
+        [SwaggerSchema("PG사가 발급한 결제용 토큰(카드번호 대신 사용)")]
         public string PaymentToken { get; set; }               // 카드번호          (CA;          CCO     )
         [SwaggerSchema("발급사코드")]
         public string CardIssuerCode { get; set; }           // 발급사코드        (CA;          CCO     )
