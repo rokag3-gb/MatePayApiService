@@ -11,7 +11,6 @@ namespace MatePayApiService.PaymentClients
     {
         private static string WCC = "@"; // WCC (@ : 온라인 고정값)
         private static string CURRENCY = "00"; // 통화코드 EX) 00=원
-        private static string CARD_TRANSACTION_TYPE = "20"; // 처리종류 (20 : 승인 고정값)
         private static string PAYMENT_REQTYPE = "0"; // 카드결제종류 (0 : 일반 고정값)
         public bool useProduction { get; set; }
         private string paymentEndpointUrl => this.useProduction ? "gw.easypay.co.kr" : "testgw.easypay.co.kr";
@@ -59,7 +58,7 @@ namespace MatePayApiService.PaymentClients
 
             // 신용카드 결제 DATA SET
             paymentParams.StartSection("card");
-            paymentParams.Add("card_txtype", CARD_TRANSACTION_TYPE);
+            paymentParams.Add("card_txtype", PaymentTransactionType.APPROVAL_ONETIME);
             paymentParams.Add("req_type", PAYMENT_REQTYPE);
             paymentParams.Add("card_amt", paymentAmount);
             paymentParams.Add("noint", CardCreditInterestsType.DEFAULT);
@@ -101,7 +100,7 @@ namespace MatePayApiService.PaymentClients
             //paymentParams.Add("user_define4", user_define4, );
             //paymentParams.Add("user_define5", user_define5, );
             //paymentParams.Add("user_define6", user_define6, );
-            //tx_req_data = cLib.SetDelim(Convert.ToChar(28).ToString());
+            //paymentParams.SplitSection();
             paymentParams.SplitSection();
 
             // 결제 트랜젝션 초기화
@@ -161,7 +160,7 @@ namespace MatePayApiService.PaymentClients
             string storeId, 
             string orderNumber, 
             string traceNumber, 
-            string encryptionKey, 
+            string sessionKey, 
             string encryptedRegistrationParams,
             string remoteIPAddr)
         {
@@ -170,9 +169,73 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_enc_data(traceNumber, encryptionKey, encryptedRegistrationParams);
+            Easypay.EP_CLI_COM__set_enc_data(traceNumber, sessionKey, encryptedRegistrationParams);
 
             // 결제 처리
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
+            TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
+            Easypay.EP_CLI_COM__cleanup();
+            return resultData;
+        }
+
+        public TokenPaymentResult ProcessTokenPayment(
+            string storeId,
+            string orderNumber,
+            string productName,
+            string consumerUid,
+            string consumerName,
+            string consumerEmail,
+            string consumerPhoneNumber,
+            string cardInstallPeriod,
+            string paymentToken,
+            string paymentAmount,
+            string remoteIPAddr
+            )
+        {
+            PaymentParamBuilder paymentParams = new PaymentParamBuilder();
+            // 배치승인정보
+            paymentParams.StartSection("pay_data");
+            paymentParams.StartSection("common");
+            paymentParams.Add("tot_amt", paymentAmount);
+            paymentParams.Add("currency", CURRENCY);
+            paymentParams.Add("client_ip", remoteIPAddr);
+            paymentParams.Add("cli_ver", "W8");
+            paymentParams.Add("escrow_yn", "N");
+            paymentParams.Add("complex_yn", "N");
+            paymentParams.EndSection();
+            paymentParams.StartSection("card");
+            paymentParams.Add("card_txtype", PaymentTransactionType.APPROVAL_TOKEN);
+            paymentParams.Add("req_type", PAYMENT_REQTYPE);
+            paymentParams.Add("card_amt", paymentAmount);
+            paymentParams.Add("noint", CardCreditInterestsType.DEFAULT);
+            paymentParams.Add("wcc", WCC);
+            paymentParams.Add("card_no", paymentToken);
+            paymentParams.Add("install_period", cardInstallPeriod);
+            paymentParams.EndSection();
+
+            // 배치주문정보
+            paymentParams.SplitSection();
+            paymentParams.StartSection("order_data");
+            paymentParams.Add("order_no", orderNumber);
+            paymentParams.Add("memb_user_no", consumerUid);
+            paymentParams.Add("user_nm", consumerName);
+            paymentParams.Add("user_mail", consumerEmail);
+            paymentParams.Add("user_phone1", consumerPhoneNumber);
+            //paymentParams.Add("user_phone2", user_phone2);
+            //paymentParams.Add("user_addr", user_addr);
+            //paymentParams.Add("product_type", product_type);
+            paymentParams.Add("product_nm", productName);
+            paymentParams.Add("product_amt", paymentAmount);
+            paymentParams.SplitSection();
+
+            // 결제 트랜젝션 초기화
+            KICCClass Easypay = new KICCClass();
+            Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
+
+            // 결제 데이터 설정
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
+
+            // 결제 실행
             string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
             TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
             Easypay.EP_CLI_COM__cleanup();

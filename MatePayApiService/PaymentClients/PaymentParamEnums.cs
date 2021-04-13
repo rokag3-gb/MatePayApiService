@@ -54,6 +54,11 @@ namespace MatePayApiService.PaymentClients
         CANCEL_BANK_DEPOSIT_PARTIALLY = 33, // 계좌이체 부분취소
         REFUND_VIRT_DEPOSIT_ENTIRELY = 60, // 가상계좌 전체환불
         REFUND_VIRT_DEPOSIT_PARTIALLY = 62 // 가상계좌 부분환불
+    }
 
+    public static class PaymentTransactionType
+    {
+        public static string APPROVAL_ONETIME = "20";
+        public static string APPROVAL_TOKEN = "41";
     }
 }
