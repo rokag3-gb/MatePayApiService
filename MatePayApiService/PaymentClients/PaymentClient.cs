@@ -33,7 +33,7 @@ namespace MatePayApiService.PaymentClients
             string paymentParams = builder.StartSection("pay_data")
             // 결제 공통 정보 DATA
             .StartSection("common")
-            .Add("tot_amt", inputs.PaymentAmount.ToString())
+            .Add("tot_amt", inputs.PaymentAmount)
             .Add("currency", CURRENCY)
             .Add("client_ip", remoteIPAddr)
             //paymentParams.Add("cli_ver", inputs.client_version);
@@ -45,7 +45,7 @@ namespace MatePayApiService.PaymentClients
             .StartSection("card")
             .Add("card_txtype", PaymentTransactionType.APPROVAL_ONETIME)
             .Add("req_type", PAYMENT_REQTYPE)
-            .Add("card_amt", inputs.PaymentAmount.ToString())
+            .Add("card_amt", inputs.PaymentAmount)
             .Add("noint", CardCreditInterestsType.DEFAULT)
             .Add("wcc", WCC)
             .Add("install_period", inputs.CardInstallPeriod)
@@ -78,7 +78,7 @@ namespace MatePayApiService.PaymentClients
             //paymentParams.Add("user_addr", inputs.user_addr, );
             //paymentParams.Add("product_type", inputs.product_type, )
             .Add("product_nm", inputs.ProductName)
-            .Add("product_amt", inputs.PaymentAmount.ToString())
+            .Add("product_amt", inputs.PaymentAmount)
             //paymentParams.Add("user_define1", inputs.user_define1, );
             //paymentParams.Add("user_define2", inputs.user_define2, );
             //paymentParams.Add("user_define3", inputs.user_define3, );

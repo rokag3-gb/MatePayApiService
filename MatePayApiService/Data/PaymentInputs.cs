@@ -86,7 +86,7 @@ namespace MatePayApiService.Data
         [Required]
         public string PaymentToken{ get; set; }
         [Required]
-        public string PaymentAmount{ get; set; }
+        public int PaymentAmount{ get; set; }
     }
 
 }

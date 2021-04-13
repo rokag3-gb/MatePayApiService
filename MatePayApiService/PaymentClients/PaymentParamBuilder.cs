@@ -28,6 +28,11 @@ namespace MatePayApiService.PaymentClients
             }
             return this;
         }
+        public PaymentParamBuilder Add(string key, int value)
+        {
+            this.paramBuilder.Append($"{key}={value}{Convert.ToChar(31)}");
+            return this;
+        }
         public PaymentParamBuilder EndSection()
         {
             // 레코드 경계 할당 문자 추가
