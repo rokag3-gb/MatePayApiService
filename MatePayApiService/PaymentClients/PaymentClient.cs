@@ -202,5 +202,46 @@ namespace MatePayApiService.PaymentClients
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
+
+        public TokenPaymentResults CancelTokenPayment(CancelTokenPaymentInput inputs, string remoteIPAddr)
+        {
+            PaymentParamBuilder builder = new PaymentParamBuilder();
+            string paymentParams = builder.StartSection("mgr_data")
+            .Add("mgr_txtype", inputs.CancelType.ToString("D"))
+            // .Add("mgr_subtype", mgr_subtype)
+            .Add("org_cno", inputs.TxNumber)
+            .Add("order_no", inputs.OrderNumber)
+            //.Add("pay_type", pay_type)
+            .Add("mgr_amt", inputs.CancelAmount)
+            // .Add("mgr_rem_amt", mgr_rem_amt)
+            // .Add("mgr_bank_cd", mgr_bank_cd)
+            // .Add("mgr_account", mgr_account)
+            // .Add("mgr_depositor", mgr_depositor)
+            // .Add("mgr_socno", mgr_socno)
+            // .Add("mgr_telno", mgr_telno)
+            // .Add("deli_cd", deli_cd)
+            // .Add("deli_corp_cd", deli_corp_cd)
+            // .Add("deli_invoice", deli_invoice)
+            // .Add("deli_rcv_nm", deli_rcv_nm)
+            // .Add("deli_rcv_tel", deli_rcv_tel)
+            .Add("req_ip", remoteIPAddr)
+            .Add("req_id", inputs.RequesterId)
+            .Add("mgr_msg", inputs.CancelReason)
+            .SplitSection()
+            .ToString();
+
+            // 결제 트랜젝션 초기화
+            KICCClass Easypay = new KICCClass();
+            Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
+
+            // 결제 데이터 설정
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams);
+
+            // 결제 실행
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, inputs.StoreId, remoteIPAddr, inputs.OrderNumber);
+            TokenPaymentResults resultData = new TokenPaymentResults(Easypay);
+            Easypay.EP_CLI_COM__cleanup();
+            return resultData;
+        }
     }
 }

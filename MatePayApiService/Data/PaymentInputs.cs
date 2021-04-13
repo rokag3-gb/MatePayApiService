@@ -89,4 +89,23 @@ namespace MatePayApiService.Data
         public int PaymentAmount{ get; set; }
     }
 
+    public class CancelTokenPaymentInput
+    {
+        [Required]
+        public string StoreId { get; set; }
+        [Required]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public PaymentCancelOption CancelType { get; set; }
+        [Required]
+        public string TxNumber { get; set; }
+        [Required]
+        public string OrderNumber { get; set; }
+        [Required]
+        public int CancelAmount { get; set; }
+        [Required]
+        public string RequesterId { get; set; }
+        [Required]
+        public string CancelReason { get; set; }
+    }
+
 }

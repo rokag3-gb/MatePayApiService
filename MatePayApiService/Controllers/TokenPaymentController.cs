@@ -36,6 +36,19 @@ namespace MatePayApiService.Controllers
             return response;
         }
 
+        [HttpPut]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status403Forbidden)]
+        public ActionResult<TokenPaymentResults> Cancel(CancelTokenPaymentInput requestData)
+        {
+            TokenPaymentResults result = _paymentClient.CancelTokenPayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
+            ObjectResult response = new ObjectResult(result);
+            //response.StatusCode = (int)result.ResolveHttpStatusCode();
+            return response;
+        }
     }
 }

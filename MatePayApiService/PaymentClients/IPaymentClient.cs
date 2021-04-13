@@ -20,5 +20,9 @@ namespace MatePayApiService.PaymentClients
         TokenPaymentResults ProcessTokenPayment(
             NewTokenPaymentInput inputs,
             string remoteIPAddr);
+
+        TokenPaymentResults CancelTokenPayment(
+            CancelTokenPaymentInput inputs,
+            string remoteIPAddr);
     }
 }
