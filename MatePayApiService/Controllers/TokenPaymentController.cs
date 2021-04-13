@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MatePayApiService.PaymentClients;
 using MatePayApiService.Data;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace MatePayApiService.Controllers
 {
@@ -22,6 +24,10 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "결제 토큰으로 결제 진행 및 승인",
+            Description = "사전에 PG사에 등록하여 발급한 결제용 토큰으로 결제 진행 및 승인"
+        )]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status401Unauthorized)]
@@ -37,6 +43,10 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPut]
+        [SwaggerOperation(
+            Summary = "결제 토큰으로 결제 취소 또는 변경",
+            Description = "결제 토큰으로 진행하여 승인한 결제을 취소 하거나 수정"
+        )]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status401Unauthorized)]

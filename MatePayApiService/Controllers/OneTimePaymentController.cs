@@ -7,6 +7,8 @@ using Microsoft.Extensions.Logging;
 using MatePayApiService.PaymentClients;
 using MatePayApiService.Data;
 using Microsoft.AspNetCore.Http;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace MatePayApiService.Controllers
 {
@@ -26,6 +28,10 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "일회성 결제 처리 및 승인",
+            Description = "결제수단 정보를 직접 입력하여 일회성 결제 진행 및 승인"
+        )]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]
@@ -41,6 +47,10 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPut]
+        [SwaggerOperation(
+            Summary = "일회성 결제 취소 또는 변경",
+            Description = "결제수단 정보를 직접 입력하여 진행한 일회성 결제를 취소하거나 수정"
+        )]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status401Unauthorized)]

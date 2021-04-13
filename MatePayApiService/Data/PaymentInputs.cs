@@ -19,23 +19,24 @@ namespace MatePayApiService.Data
         public string ProductName{ get; set; }
         [Required]
         [SwaggerSchema("사용자 이름")]
-        public string ConsumerName{ get; set; }
+        public string OwnerName{ get; set; }
         [Required]
         [EmailAddress]
         [SwaggerSchema("사용자 이메일 주소")]
-        public string ConsumerEmail{ get; set; }
+        public string OwnerEmail{ get; set; }
         [Required]
         [SwaggerSchema("사용자 전화번호")]
-        public string ConsumerPhoneNumber{ get; set; }
+        public string OwnerPhoneNumber{ get; set; }
         [Required]
         [SwaggerSchema("카드 번호")]
         public string CardNumber{ get; set; }
         [Required]
         [SwaggerSchema("카드 유효기간 (YYMM)")]
         public string CardValidThru{ get; set; }
-        [Required]
-        [SwaggerSchema("카드 할부기간")]
-        public string CardInstallPeriod{ get; set; }
+        [SwaggerSchema("무이자여부")]
+        public bool IsNoInterestPayment { get; set; } = false;
+        [SwaggerSchema("카드 할부기간 (미입력시 기본값 일시불)")]
+        public string CardInstallPeriod{ get; set; } = CardInstallPeriodValues.LUMP_SUM_PAYMENT;
         [Required]
         [SwaggerSchema("카드 암호 앞 2자리")]
         public string CardPassword{ get; set; }
@@ -68,11 +69,11 @@ namespace MatePayApiService.Data
             PaymentCancelOption.CANCEL_BANK_DEPOSIT_PARTIALLY,
             PaymentCancelOption.REFUND_VIRT_DEPOSIT_PARTIALLY
         })]
-        [SwaggerSchema("부분 취소/환불 금액")]
+        [SwaggerSchema("부분 취소/환불 금액(취소 유형이 부분 취소이면 필수, 아니면 불필요)")]
         public int CancelAmount{ get; set; }
         [Required]
         [SwaggerSchema("취소 요청자 식별값")]
-        public string RequesterId{ get; set; }
+        public string RequesterID{ get; set; }
         [Required]
         [SwaggerSchema("취소 사유")]
         public string CancelReason{ get; set; }
@@ -109,19 +110,21 @@ namespace MatePayApiService.Data
         [SwaggerSchema("상품 이름")]
         public string ProductName{ get; set; }
         [Required]
-        public string ConsumerUid{ get; set; }
+        [SwaggerSchema("사용자 ID")]
+        public string OwnerID{ get; set; }
         [Required]
         [SwaggerSchema("사용자 이름")]
-        public string ConsumerName{ get; set; }
+        public string OwnerName{ get; set; }
         [Required]
         [SwaggerSchema("사용자 이메일 주소")]
-        public string ConsumerEmail{ get; set; }
+        public string OwnerEmail{ get; set; }
         [Required]
         [SwaggerSchema("사용자 전화번호")]
-        public string ConsumerPhoneNumber{ get; set; }
-        [Required]
-        [SwaggerSchema("카드 할부기간")]
-        public string CardInstallPeriod{ get; set; }
+        public string OwnerPhoneNumber{ get; set; }
+        [SwaggerSchema("무이자여부")]
+        public bool IsNoInterestPayment { get; set; } = false;
+        [SwaggerSchema("카드 할부기간 (미입력시 기본값 일시불)")]
+        public string CardInstallPeriod{ get; set; } = CardInstallPeriodValues.LUMP_SUM_PAYMENT;
         [Required]
         [SwaggerSchema("PG사가 발급한 결제용 토큰(카드번호 대신 사용)")]
         public string PaymentToken{ get; set; }
@@ -151,11 +154,11 @@ namespace MatePayApiService.Data
             PaymentCancelOption.CANCEL_BANK_DEPOSIT_PARTIALLY,
             PaymentCancelOption.REFUND_VIRT_DEPOSIT_PARTIALLY
         })]
-        [SwaggerSchema("부분 취소/환불 금액")]
+        [SwaggerSchema("부분 취소/환불 금액(취소 유형이 부분 취소이면 필수, 아니면 불필요)")]
         public int CancelAmount { get; set; }
         [Required]
         [SwaggerSchema("취소 요청자 식별값")]
-        public string RequesterId { get; set; }
+        public string RequesterID { get; set; }
         [Required]
         [SwaggerSchema("취소 사유")]
         public string CancelReason { get; set; }

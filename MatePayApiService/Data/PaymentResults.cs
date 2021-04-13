@@ -2,6 +2,8 @@
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Net;
+using System;
+using MatePayApiService.PaymentClients;
 
 namespace MatePayApiService.Data
 {
@@ -15,7 +17,7 @@ namespace MatePayApiService.Data
         [SwaggerSchema("PG거래번호")]
         public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
         [SwaggerSchema("총 결제금액")]
-        public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
+        public int TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
         [SwaggerSchema("주문번호")]
         public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
         [SwaggerSchema("승인번호")]
@@ -23,9 +25,9 @@ namespace MatePayApiService.Data
         [SwaggerSchema("승인일시")]
         public string ApprovedAt { get; set; }           // 승인일시          (CA;      CC;      CPC)
         [SwaggerSchema("에스크로 사용유무")]
-        public string WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
+        public bool WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
         [SwaggerSchema("복합결제 유무")]
-        public string IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
+        public bool IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
         [SwaggerSchema("상태코드")]
         public string StatusCode { get; set; }               // 상태코드          (CA;      CC;      CPC)
         [SwaggerSchema("상태메시지")]
@@ -47,17 +49,17 @@ namespace MatePayApiService.Data
         [SwaggerSchema("할부개월")]
         public string CardInstallPeriod { get; set; } // 할부개월          (CA;          CCO     )
         [SwaggerSchema("무이자여부")]
-        public string IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
+        public bool IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
         [SwaggerSchema("부분취소 가능여부")]
-        public string CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
+        public bool CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
         [SwaggerSchema("신용카드 종류")]
         public string CardKind { get; set; }         // 신용카드 종류     (CA                   )
         [SwaggerSchema("신용카드 구분")]
         public string CardType { get; set; } // 신용카드 구분     (CA                   )
         [SwaggerSchema("쿠폰 사용유무")]
-        public string HaveCouponsUsed { get; set; }           // 쿠폰 사용유무     (    CAO;     CCO     )
+        public bool HaveCouponsUsed { get; set; }           // 쿠폰 사용유무     (    CAO;     CCO     )
         [SwaggerSchema("쿠폰 사용금액")]
-        public string CouponDiscountAmount { get; set; }           // 쿠폰 사용금액     (    CAO              )
+        public int CouponDiscountAmount { get; set; }           // 쿠폰 사용금액     (    CAO              )
         [SwaggerSchema("매입 취소 일시")]
         public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
         [SwaggerSchema("취소일시")]
@@ -72,12 +74,12 @@ namespace MatePayApiService.Data
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
             TxNumber = Easypay.EP_CLI_COM__get_value("cno");                      // PG거래번호        (CA; CAO; CC; CCO; CPC)
-            TotalPaymentAmount = Easypay.EP_CLI_COM__get_value("amount");                // 총 결제금액       (CA;                  )
+            TotalPaymentAmount = Convert.ToInt32(Easypay.EP_CLI_COM__get_value("amount"));                // 총 결제금액       (CA;                  )
             OrderNumber = Easypay.EP_CLI_COM__get_value("order_no");            // 주문번호          (CA;                  )
             ApprovalNumber = Easypay.EP_CLI_COM__get_value("auth_no");              // 승인번호          (CA;                  )
             ApprovedAt = Easypay.EP_CLI_COM__get_value("tran_date");          // 승인일시          (CA;      CC;      CPC)
-            WasEscrowUsed = Easypay.EP_CLI_COM__get_value("escrow_yn");          // 에스크로 사용유무 (CA;                  )
-            IsComplexPayment = Easypay.EP_CLI_COM__get_value("complex_yn");        // 복합결제 유무     (CA;                  )
+            WasEscrowUsed = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("escrow_yn"));          // 에스크로 사용유무 (CA;                  )
+            IsComplexPayment = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("complex_yn"));        // 복합결제 유무     (CA;                  )
             StatusCode = Easypay.EP_CLI_COM__get_value("stat_cd");              // 상태코드          (CA;      CC;      CPC)
             StatusMessage = Easypay.EP_CLI_COM__get_value("stat_msg");            // 상태메시지        (CA;      CC;      CPC)
             PaymentType = Easypay.EP_CLI_COM__get_value("pay_type");            // 결제수단          (CA;                  )
@@ -88,12 +90,12 @@ namespace MatePayApiService.Data
             CardAcquirerCode = Easypay.EP_CLI_COM__get_value("acquirer_cd");      // 매입사코드        (CA;          CCO     )
             CardAcquirerName = Easypay.EP_CLI_COM__get_value("acquirer_nm");      // 매입사명          (CA;          CCO     )
             CardInstallPeriod = Easypay.EP_CLI_COM__get_value("install_period");// 할부개월          (CA;          CCO     )
-            IsNoInterestPayment = Easypay.EP_CLI_COM__get_value("noint");                  // 무이자여부        (CA                   )
-            CanCancelPartitialy = Easypay.EP_CLI_COM__get_value("part_cancel_yn");// 부분취소 가능여부 (CA                   )
+            IsNoInterestPayment = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("noint"));                  // 무이자여부        (CA                   )
+            CanCancelPartitialy = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("part_cancel_yn"));// 부분취소 가능여부 (CA                   )
             CardKind = Easypay.EP_CLI_COM__get_value("card_gubun");        // 신용카드 종류     (CA                   )
             CardType = Easypay.EP_CLI_COM__get_value("card_biz_gubun");// 신용카드 구분     (CA                   )
-            HaveCouponsUsed = Easypay.EP_CLI_COM__get_value("cpon_flag");          // 쿠폰 사용유무     (    CAO;     CCO     )
-            CouponDiscountAmount = Easypay.EP_CLI_COM__get_value("used_cpon");          // 쿠폰 사용금액     (    CAO              )
+            HaveCouponsUsed = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("cpon_flag"));          // 쿠폰 사용유무     (    CAO;     CCO     )
+            CouponDiscountAmount = Convert.ToInt32(Easypay.EP_CLI_COM__get_value("used_cpon"));          // 쿠폰 사용금액     (    CAO              )
             AcquireCanceledAt = Easypay.EP_CLI_COM__get_value("canc_acq_date");  // 매입취소일시      (                  CPC)
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");          // 취소일시          (CC;               CPC)
             CanceledTxNumber = Easypay.EP_CLI_COM__get_value("mgr_seqno");
@@ -157,7 +159,7 @@ namespace MatePayApiService.Data
         [SwaggerSchema("PG거래번호")]
         public string TxNumber { get; set; }                       // PG거래번호        (CA; CAO; CC; CCO; CPC)
         [SwaggerSchema("총 결제금액")]
-        public string TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
+        public int TotalPaymentAmount { get; set; }                 // 총 결제금액       (CA;                  )
         [SwaggerSchema("주문번호")]
         public string OrderNumber { get; set; }             // 주문번호          (CA;                  )
         [SwaggerSchema("승인번호")]
@@ -165,9 +167,9 @@ namespace MatePayApiService.Data
         [SwaggerSchema("승인일시")]
         public string ApprovedAt { get; set; }           // 승인일시          (CA;      CC;      CPC)
         [SwaggerSchema("에스크로 사용유무")]
-        public string WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
+        public bool WasEscrowUsed { get; set; }           // 에스크로 사용유무 (CA;                  )
         [SwaggerSchema("복합결제 유무")]
-        public string IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
+        public bool IsComplexPayment { get; set; }         // 복합결제 유무     (CA;                  )
         [SwaggerSchema("상태코드")]
         public string StatusCode { get; set; }               // 상태코드          (CA;      CC;      CPC)
         [SwaggerSchema("상태메시지")]
@@ -189,15 +191,15 @@ namespace MatePayApiService.Data
         [SwaggerSchema("할부개월")]
         public string CardInstallPeriod { get; set; } // 할부개월          (CA;          CCO     )
         [SwaggerSchema("무이자여부")]
-        public string IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
-        [SwaggerSchema("부분취소")]
-        public string CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
+        public bool IsNoInterestPayment { get; set; }                   // 무이자여부        (CA                   )
+        [SwaggerSchema("부분취소 가능여부")]
+        public bool CanCancelPartitialy { get; set; } // 부분취소 가능여부 (CA                   )
         [SwaggerSchema("신용카드 종류")]
         public string CardKind { get; set; }         // 신용카드 종류     (CA                   )
         [SwaggerSchema("신용카드 구분")]
         public string CardType { get; set; } // 신용카드 구분     (CA                   )
-        [SwaggerSchema("장바구니")]
-        public string IsCartPayment { get; set; } // 장바구니 결제 여부
+        [SwaggerSchema("장바구니 결제 여부")]
+        public bool IsCartPayment { get; set; } // 장바구니 결제 여부
         [SwaggerSchema("매입 취소 일시")]
         public string AcquireCanceledAt { get; set; }   // 매입취소일시      (                  CPC)
         [SwaggerSchema("취소일시")]
@@ -211,12 +213,12 @@ namespace MatePayApiService.Data
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");
             TxNumber = Easypay.EP_CLI_COM__get_value("cno");
-            TotalPaymentAmount = Easypay.EP_CLI_COM__get_value("amount");
+            TotalPaymentAmount = Convert.ToInt32(Convert.ToDecimal(Easypay.EP_CLI_COM__get_value("amount")));
             OrderNumber = Easypay.EP_CLI_COM__get_value("order_no");
             ApprovalNumber = Easypay.EP_CLI_COM__get_value("auth_no");
             ApprovedAt = Easypay.EP_CLI_COM__get_value("tran_date");
-            WasEscrowUsed = Easypay.EP_CLI_COM__get_value("escrow_yn");
-            IsComplexPayment = Easypay.EP_CLI_COM__get_value("complex_yn");
+            WasEscrowUsed = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("escrow_yn"));
+            IsComplexPayment = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("complex_yn"));
             StatusCode = Easypay.EP_CLI_COM__get_value("stat_cd");
             StatusMessage = Easypay.EP_CLI_COM__get_value("stat_msg");
             PaymentType = Easypay.EP_CLI_COM__get_value("pay_type");
@@ -227,14 +229,20 @@ namespace MatePayApiService.Data
             CardAcquirerCode = Easypay.EP_CLI_COM__get_value("acquirer_cd");
             CardAcquirerName = Easypay.EP_CLI_COM__get_value("acquirer_nm");
             CardInstallPeriod = Easypay.EP_CLI_COM__get_value("install_period");
-            IsNoInterestPayment = Easypay.EP_CLI_COM__get_value("noint");
-            CanCancelPartitialy = Easypay.EP_CLI_COM__get_value("part_cancel_yn");
+            IsNoInterestPayment = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("noint"));
+            CanCancelPartitialy = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("part_cancel_yn"));
             CardKind = Easypay.EP_CLI_COM__get_value("card_gubun");
             CardType = Easypay.EP_CLI_COM__get_value("card_biz_gubun");
-            IsCartPayment = Easypay.EP_CLI_COM__get_value("bk_pay_yn");
+            IsCartPayment = Utils.YNToBool(Easypay.EP_CLI_COM__get_value("bk_pay_yn"));
             AcquireCanceledAt = Easypay.EP_CLI_COM__get_value("canc_acq_date");
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");
             RefundScheduledAt = Easypay.EP_CLI_COM__get_value("refund_date");
+        }
+    }
+
+    public class Utils{
+        public static bool YNToBool(string yn){
+            return yn.Equals("Y");
         }
     }
 }

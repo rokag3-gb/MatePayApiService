@@ -46,13 +46,13 @@ namespace MatePayApiService.PaymentClients
             .Add("card_txtype", PaymentTransactionType.APPROVAL_ONETIME)
             .Add("req_type", PAYMENT_REQTYPE)
             .Add("card_amt", inputs.PaymentAmount)
-            .Add("noint", CardCreditInterestsType.DEFAULT)
+            .Add("noint", CardCreditInterestsType.GetFromBool(inputs.IsNoInterestPayment))
             .Add("wcc", WCC)
             .Add("install_period", inputs.CardInstallPeriod)
             .Add("cert_type", PaymentCertType.DEFAULT_NO_CERT)
             .Add("card_no", inputs.CardNumber)
             .Add("expire_date", inputs.CardValidThru)
-            .Add("user_type", ConsumerType.getFromIdentifyCode(inputs.CardOwnerIdentifyCode))
+            .Add("user_type", OwnerType.GetFromIdentifyCode(inputs.CardOwnerIdentifyCode))
 
             //if (cert_type == "0") // 인증
             //{
@@ -71,9 +71,9 @@ namespace MatePayApiService.PaymentClients
             .Add("order_no", inputs.OrderNumber)
             //paymentParams.Add("memb_user_no", inputs.memb_user_no, );
             //paymentParams.Add("user_id", inputs.user_id, )
-            .Add("user_nm", inputs.ConsumerName)
-            .Add("user_mail", inputs.ConsumerEmail)
-            .Add("user_phone1", inputs.ConsumerPhoneNumber)
+            .Add("user_nm", inputs.OwnerName)
+            .Add("user_mail", inputs.OwnerEmail)
+            .Add("user_phone1", inputs.OwnerPhoneNumber)
             //paymentParams.Add("user_phone2", inputs.user_phone2, );
             //paymentParams.Add("user_addr", inputs.user_addr, );
             //paymentParams.Add("product_type", inputs.product_type, )
@@ -115,7 +115,7 @@ namespace MatePayApiService.PaymentClients
             .Add("order_no", inputs.OrderNumber)
             .Add("mgr_amt", inputs.CancelAmount.ToString())
             .Add("req_ip", remoteIPAddr)
-            .Add("req_id", inputs.RequesterId)
+            .Add("req_id", inputs.RequesterID)
             .Add("mgr_msg", inputs.CancelReason)
             .SplitSection()
             .ToString();
@@ -167,7 +167,7 @@ namespace MatePayApiService.PaymentClients
             .Add("card_txtype", PaymentTransactionType.APPROVAL_TOKEN)
             .Add("req_type", PAYMENT_REQTYPE)
             .Add("card_amt", inputs.PaymentAmount)
-            .Add("noint", CardCreditInterestsType.DEFAULT)
+            .Add("noint", CardCreditInterestsType.GetFromBool(inputs.IsNoInterestPayment))
             .Add("wcc", WCC)
             .Add("card_no", inputs.PaymentToken)
             .Add("install_period", inputs.CardInstallPeriod)
@@ -177,10 +177,10 @@ namespace MatePayApiService.PaymentClients
             .SplitSection()
             .StartSection("order_data")
             .Add("order_no", inputs.OrderNumber)
-            .Add("memb_user_no", inputs.ConsumerUid)
-            .Add("user_nm", inputs.ConsumerName)
-            .Add("user_mail", inputs.ConsumerEmail)
-            .Add("user_phone1", inputs.ConsumerPhoneNumber)
+            .Add("memb_user_no", inputs.OwnerID)
+            .Add("user_nm", inputs.OwnerName)
+            .Add("user_mail", inputs.OwnerEmail)
+            .Add("user_phone1", inputs.OwnerPhoneNumber)
             //paymentParams.Add("user_phone2", inputs.user_phone2)
             //paymentParams.Add("user_addr", inputs.user_addr)
             //paymentParams.Add("product_type", inputs.product_type)
@@ -225,7 +225,7 @@ namespace MatePayApiService.PaymentClients
             // .Add("deli_rcv_nm", deli_rcv_nm)
             // .Add("deli_rcv_tel", deli_rcv_tel)
             .Add("req_ip", remoteIPAddr)
-            .Add("req_id", inputs.RequesterId)
+            .Add("req_id", inputs.RequesterID)
             .Add("mgr_msg", inputs.CancelReason)
             .SplitSection()
             .ToString();

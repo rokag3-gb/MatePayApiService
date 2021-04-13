@@ -14,17 +14,20 @@ namespace MatePayApiService.PaymentClients
         public static string MODIFY_PAYMENT => "00201000";
     }
     // 결제 사용자 유형
-    public static class ConsumerType
+    public static class OwnerType
     {
         // 개인
         public static string INDIVIDUAL => "0";
         // 법인
         public static string CORPORATION => "1";
 
-        public static string getFromIdentifyCode(string identifyCode) 
+        public static string GetFromIdentifyCode(string identifyCode) 
         {
             return identifyCode.Trim().Replace("-", "").Length == 10 ? CORPORATION : INDIVIDUAL;
         }
+    }
+    public static class CardInstallPeriodValues{
+        public static string LUMP_SUM_PAYMENT = "00";
     }
     // 카드 무이자 할부 여부
     public static class CardCreditInterestsType
@@ -33,6 +36,10 @@ namespace MatePayApiService.PaymentClients
         public static string DEFAULT => "00";
         // 무이자
         public static string NO_INTERESTS => "02";
+
+        public static string GetFromBool(bool isNoInterests){
+            return isNoInterests? NO_INTERESTS : DEFAULT;
+        }
     }
     // 결제 인증 유형
     public static class PaymentCertType
