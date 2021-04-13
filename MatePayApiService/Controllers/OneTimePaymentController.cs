@@ -33,20 +33,7 @@ namespace MatePayApiService.Controllers
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
         public ActionResult<OneTimePaymentResults> Process(NewOneTimePaymentInput requestData)
         {
-            OneTimePaymentResults result = _paymentClient.ProcessOneTimePayment(
-                requestData.StoreId,
-                requestData.OrderNumber,
-                requestData.ProductName,
-                requestData.ConsumerName,
-                requestData.ConsumerEmail,
-                requestData.ConsumerPhoneNumber,
-                requestData.CardNumber,
-                requestData.CardValidThru,
-                requestData.CardInstallPeriod,
-                requestData.CardPassword,
-                requestData.CardOwnerIdentifyCode,
-                requestData.PaymentAmount.ToString(),
-                HttpContext.Connection.RemoteIpAddress.ToString());
+            OneTimePaymentResults result = _paymentClient.ProcessOneTimePayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             response.StatusCode = (int) result.ResolveHttpStatusCode();
@@ -61,15 +48,7 @@ namespace MatePayApiService.Controllers
         [ProducesResponseType(typeof(OneTimePaymentResults), StatusCodes.Status403Forbidden)]
         public ActionResult<OneTimePaymentResults> Cancel(CancelOneTimePaymentInput requestData)
         {
-            OneTimePaymentResults result = _paymentClient.CancelOneTimePayment(
-                requestData.StoreId,
-                requestData.CancelType,
-                requestData.TxNumber,
-                requestData.OrderNumber,
-                requestData.CancelAmount.ToString(),
-                requestData.RequesterId,
-                requestData.CancelReason,
-                HttpContext.Connection.RemoteIpAddress.ToString());
+            OneTimePaymentResults result = _paymentClient.CancelOneTimePayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             response.StatusCode = (int)result.ResolveHttpStatusCode();

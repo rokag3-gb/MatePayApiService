@@ -27,217 +27,178 @@ namespace MatePayApiService.PaymentClients
             this.logLevel = 1;
         }
 
-        public OneTimePaymentResults ProcessOneTimePayment(
-            string storeId,
-            string orderNumber,
-            string productName,
-            string consumerName,
-            string consumerEmail,
-            string consumerPhoneNumber,
-            string cardNumber,
-            string cardValidThru,
-            string cardInstallPeriod,
-            string cardPassword,
-            string cardOwnerIdentifyCode,
-            string paymentAmount,
-            string remoteIPAddr
-        )
+        public OneTimePaymentResults ProcessOneTimePayment(NewOneTimePaymentInput inputs, string remoteIPAddr)
         {
-            PaymentParamBuilder paymentParams = new PaymentParamBuilder();
-
-            paymentParams.StartSection("pay_data");
+            PaymentParamBuilder builder = new PaymentParamBuilder();
+            string paymentParams = builder.StartSection("pay_data")
             // 결제 공통 정보 DATA
-            paymentParams.StartSection("common");
-            paymentParams.Add("tot_amt", paymentAmount);
-            paymentParams.Add("currency", CURRENCY);
-            paymentParams.Add("client_ip", remoteIPAddr);
-            //paymentParams.Add("cli_ver", client_version);
-            //paymentParams.Add("req_cno", req_cno);
-            //paymentParams.Add("join_cd", join_cd);
-            paymentParams.EndSection();
+            .StartSection("common")
+            .Add("tot_amt", inputs.PaymentAmount.ToString())
+            .Add("currency", CURRENCY)
+            .Add("client_ip", remoteIPAddr)
+            //paymentParams.Add("cli_ver", inputs.client_version);
+            //paymentParams.Add("req_cno", inputs.req_cno);
+            //paymentParams.Add("join_cd", inputs.join_cd)
+            .EndSection()
 
             // 신용카드 결제 DATA SET
-            paymentParams.StartSection("card");
-            paymentParams.Add("card_txtype", PaymentTransactionType.APPROVAL_ONETIME);
-            paymentParams.Add("req_type", PAYMENT_REQTYPE);
-            paymentParams.Add("card_amt", paymentAmount);
-            paymentParams.Add("noint", CardCreditInterestsType.DEFAULT);
-            paymentParams.Add("wcc", WCC);
-            paymentParams.Add("install_period", cardInstallPeriod);
-            paymentParams.Add("cert_type", PaymentCertType.DEFAULT_NO_CERT);
-            paymentParams.Add("card_no", cardNumber);
-            paymentParams.Add("expire_date", cardValidThru);
-            paymentParams.Add("user_type", ConsumerType.getFromIdentifyCode(cardOwnerIdentifyCode));
+            .StartSection("card")
+            .Add("card_txtype", PaymentTransactionType.APPROVAL_ONETIME)
+            .Add("req_type", PAYMENT_REQTYPE)
+            .Add("card_amt", inputs.PaymentAmount.ToString())
+            .Add("noint", CardCreditInterestsType.DEFAULT)
+            .Add("wcc", WCC)
+            .Add("install_period", inputs.CardInstallPeriod)
+            .Add("cert_type", PaymentCertType.DEFAULT_NO_CERT)
+            .Add("card_no", inputs.CardNumber)
+            .Add("expire_date", inputs.CardValidThru)
+            .Add("user_type", ConsumerType.getFromIdentifyCode(inputs.CardOwnerIdentifyCode))
 
             //if (cert_type == "0") // 인증
             //{
-            paymentParams.Add("password", cardPassword);
-            paymentParams.Add("auth_value", cardOwnerIdentifyCode);
+            .Add("password", inputs.CardPassword)
+            .Add("auth_value", inputs.CardOwnerIdentifyCode)
             //}
             //else if (cert_type == "2") // 구인증
             //{
-            //	paymentParams.Add("auth_value", auth_value);
+            //	paymentParams.Add("auth_value", inputs.auth_value);
             //}
-            paymentParams.EndSection();
-            paymentParams.SplitSection();
+            .EndSection()
+            .SplitSection()
 
             // 결제 주문 정보 DATA
-            paymentParams.StartSection("order_data");
-            paymentParams.Add("order_no", orderNumber);
-            //paymentParams.Add("memb_user_no", memb_user_no, );
-            //paymentParams.Add("user_id", user_id, );
-            paymentParams.Add("user_nm", consumerName);
-            paymentParams.Add("user_mail", consumerEmail);
-            paymentParams.Add("user_phone1", consumerPhoneNumber);
-            //paymentParams.Add("user_phone2", user_phone2, );
-            //paymentParams.Add("user_addr", user_addr, );
-            //paymentParams.Add("product_type", product_type, );
-            paymentParams.Add("product_nm", productName);
-            paymentParams.Add("product_amt", paymentAmount);
-            //paymentParams.Add("user_define1", user_define1, );
-            //paymentParams.Add("user_define2", user_define2, );
-            //paymentParams.Add("user_define3", user_define3, );
-            //paymentParams.Add("user_define4", user_define4, );
-            //paymentParams.Add("user_define5", user_define5, );
-            //paymentParams.Add("user_define6", user_define6, );
-            //paymentParams.SplitSection();
-            paymentParams.SplitSection();
+            .StartSection("order_data")
+            .Add("order_no", inputs.OrderNumber)
+            //paymentParams.Add("memb_user_no", inputs.memb_user_no, );
+            //paymentParams.Add("user_id", inputs.user_id, )
+            .Add("user_nm", inputs.ConsumerName)
+            .Add("user_mail", inputs.ConsumerEmail)
+            .Add("user_phone1", inputs.ConsumerPhoneNumber)
+            //paymentParams.Add("user_phone2", inputs.user_phone2, );
+            //paymentParams.Add("user_addr", inputs.user_addr, );
+            //paymentParams.Add("product_type", inputs.product_type, )
+            .Add("product_nm", inputs.ProductName)
+            .Add("product_amt", inputs.PaymentAmount.ToString())
+            //paymentParams.Add("user_define1", inputs.user_define1, );
+            //paymentParams.Add("user_define2", inputs.user_define2, );
+            //paymentParams.Add("user_define3", inputs.user_define3, );
+            //paymentParams.Add("user_define4", inputs.user_define4, );
+            //paymentParams.Add("user_define5", inputs.user_define5, );
+            //paymentParams.Add("user_define6", inputs.user_define6, );
+            //paymentParams.SplitSection()
+            .SplitSection()
+            .ToString();
 
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams);
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, inputs.StoreId, remoteIPAddr, inputs.OrderNumber);
             OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public OneTimePaymentResults CancelOneTimePayment(
-            string storeId,
-                PaymentCancelOption cancelType,
-                string txNumber,
-                string orderNumber,
-                string cancelAmount,
-                string requesterId,
-                string cancelReason,
-                string remoteIPAddr
-            )
+        public OneTimePaymentResults CancelOneTimePayment(CancelOneTimePaymentInput inputs, string remoteIPAddr)
         {
             /* -------------------------------------------------------------------------- */
             /* ::: 변경관리 요청                                                            */
             /* -------------------------------------------------------------------------- */
-            PaymentParamBuilder paymentParams = new PaymentParamBuilder();
-            paymentParams.StartSection("mgr_data");
-            paymentParams.Add("mgr_txtype", cancelType.ToString("D")); //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
-            paymentParams.Add("org_cno", txNumber);
-            paymentParams.Add("order_no", orderNumber);
-            paymentParams.Add("mgr_amt", cancelAmount);
-            paymentParams.Add("req_ip", remoteIPAddr);
-            paymentParams.Add("req_id", requesterId);
-            paymentParams.Add("mgr_msg", cancelReason);
-            paymentParams.SplitSection();
+            PaymentParamBuilder builder = new PaymentParamBuilder();
+            string paymentParams = builder.StartSection("mgr_data")
+            .Add("mgr_txtype", inputs.CancelType.ToString("D")) //취소구분 40:즉시취소, 31:매입부분취소, 32:승인부분취소
+            .Add("org_cno", inputs.TxNumber)
+            .Add("order_no", inputs.OrderNumber)
+            .Add("mgr_amt", inputs.CancelAmount.ToString())
+            .Add("req_ip", remoteIPAddr)
+            .Add("req_id", inputs.RequesterId)
+            .Add("mgr_msg", inputs.CancelReason)
+            .SplitSection()
+            .ToString();
 
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams);
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, storeId, remoteIPAddr, orderNumber);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.MODIFY_PAYMENT, inputs.StoreId, remoteIPAddr, inputs.OrderNumber);
             OneTimePaymentResults resultData = new OneTimePaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public TokenPaymentResult IssuePaymentToken(
-            string storeId, 
-            string orderNumber, 
-            string traceNumber, 
-            string sessionKey, 
-            string encryptedRegistrationParams,
-            string remoteIPAddr)
+        public TokenPaymentResults IssuePaymentToken(IssuePaymentTokenInput inputs, string remoteIPAddr)
         {
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_enc_data(traceNumber, sessionKey, encryptedRegistrationParams);
+            Easypay.EP_CLI_COM__set_enc_data(inputs.TraceNumber, inputs.SessionKey, inputs.EncryptedRegistrationParams);
 
             // 결제 처리
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
-            TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, inputs.StoreId, remoteIPAddr, inputs.OrderNumber);
+            TokenPaymentResults resultData = new TokenPaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }
 
-        public TokenPaymentResult ProcessTokenPayment(
-            string storeId,
-            string orderNumber,
-            string productName,
-            string consumerUid,
-            string consumerName,
-            string consumerEmail,
-            string consumerPhoneNumber,
-            string cardInstallPeriod,
-            string paymentToken,
-            string paymentAmount,
-            string remoteIPAddr
-            )
+        public TokenPaymentResults ProcessTokenPayment(NewTokenPaymentInput inputs, string remoteIPAddr)
         {
-            PaymentParamBuilder paymentParams = new PaymentParamBuilder();
+            PaymentParamBuilder builder = new PaymentParamBuilder();
             // 배치승인정보
-            paymentParams.StartSection("pay_data");
-            paymentParams.StartSection("common");
-            paymentParams.Add("tot_amt", paymentAmount);
-            paymentParams.Add("currency", CURRENCY);
-            paymentParams.Add("client_ip", remoteIPAddr);
-            paymentParams.Add("cli_ver", "W8");
-            paymentParams.Add("escrow_yn", "N");
-            paymentParams.Add("complex_yn", "N");
-            paymentParams.EndSection();
-            paymentParams.StartSection("card");
-            paymentParams.Add("card_txtype", PaymentTransactionType.APPROVAL_TOKEN);
-            paymentParams.Add("req_type", PAYMENT_REQTYPE);
-            paymentParams.Add("card_amt", paymentAmount);
-            paymentParams.Add("noint", CardCreditInterestsType.DEFAULT);
-            paymentParams.Add("wcc", WCC);
-            paymentParams.Add("card_no", paymentToken);
-            paymentParams.Add("install_period", cardInstallPeriod);
-            paymentParams.EndSection();
+            string paymentParams = builder.StartSection("pay_data")
+            .StartSection("common")
+            .Add("tot_amt", inputs.PaymentAmount)
+            .Add("currency", CURRENCY)
+            .Add("client_ip", remoteIPAddr)
+            .Add("cli_ver", "W8")
+            .Add("escrow_yn", "N")
+            .Add("complex_yn", "N")
+            .EndSection()
+            .StartSection("card")
+            .Add("card_txtype", PaymentTransactionType.APPROVAL_TOKEN)
+            .Add("req_type", PAYMENT_REQTYPE)
+            .Add("card_amt", inputs.PaymentAmount)
+            .Add("noint", CardCreditInterestsType.DEFAULT)
+            .Add("wcc", WCC)
+            .Add("card_no", inputs.PaymentToken)
+            .Add("install_period", inputs.CardInstallPeriod)
+            .EndSection()
 
             // 배치주문정보
-            paymentParams.SplitSection();
-            paymentParams.StartSection("order_data");
-            paymentParams.Add("order_no", orderNumber);
-            paymentParams.Add("memb_user_no", consumerUid);
-            paymentParams.Add("user_nm", consumerName);
-            paymentParams.Add("user_mail", consumerEmail);
-            paymentParams.Add("user_phone1", consumerPhoneNumber);
-            //paymentParams.Add("user_phone2", user_phone2);
-            //paymentParams.Add("user_addr", user_addr);
-            //paymentParams.Add("product_type", product_type);
-            paymentParams.Add("product_nm", productName);
-            paymentParams.Add("product_amt", paymentAmount);
-            paymentParams.SplitSection();
+            .SplitSection()
+            .StartSection("order_data")
+            .Add("order_no", inputs.OrderNumber)
+            .Add("memb_user_no", inputs.ConsumerUid)
+            .Add("user_nm", inputs.ConsumerName)
+            .Add("user_mail", inputs.ConsumerEmail)
+            .Add("user_phone1", inputs.ConsumerPhoneNumber)
+            //paymentParams.Add("user_phone2", inputs.user_phone2)
+            //paymentParams.Add("user_addr", inputs.user_addr)
+            //paymentParams.Add("product_type", inputs.product_type)
+            .Add("product_nm", inputs.ProductName)
+            .Add("product_amt", inputs.PaymentAmount)
+            .SplitSection()
+            .ToString();
 
             // 결제 트랜젝션 초기화
             KICCClass Easypay = new KICCClass();
             Easypay.EP_CLI_COM__init(this.paymentEndpointUrl, this.paymentEndpointPort, this.certFilePath, this.logFilePath, this.logLevel);
 
             // 결제 데이터 설정
-            Easypay.EP_CLI_COM__set_plan_data(paymentParams.ToString());
+            Easypay.EP_CLI_COM__set_plan_data(paymentParams);
 
             // 결제 실행
-            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, storeId, remoteIPAddr, orderNumber);
-            TokenPaymentResult resultData = new TokenPaymentResult(Easypay);
+            string transactionResultData = Easypay.EP_CLI_COM__proc(TxCode.APPROVE_PAYMENT, inputs.StoreId, remoteIPAddr, inputs.OrderNumber);
+            TokenPaymentResults resultData = new TokenPaymentResults(Easypay);
             Easypay.EP_CLI_COM__cleanup();
             return resultData;
         }

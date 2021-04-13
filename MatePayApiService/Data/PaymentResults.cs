@@ -147,7 +147,7 @@ namespace MatePayApiService.Data
         }
     }
 
-    public class TokenPaymentResult
+    public class TokenPaymentResults
     {
         public static Dictionary<string, HttpStatusCode> ResultCodeToHttpStatusCodeMap;
         [SwaggerSchema("결제 결과 응답코드")]
@@ -205,8 +205,8 @@ namespace MatePayApiService.Data
         [SwaggerSchema("환불 예정 일시")]
         public string RefundScheduledAt { get; set; } // 환불예정일시
 
-        public TokenPaymentResult() { }
-        public TokenPaymentResult(KICCClass Easypay)
+        public TokenPaymentResults() { }
+        public TokenPaymentResults(KICCClass Easypay)
         {
             ResultCode = Easypay.EP_CLI_COM__get_value("res_cd");
             ResultMessage = Easypay.EP_CLI_COM__get_value("res_msg");

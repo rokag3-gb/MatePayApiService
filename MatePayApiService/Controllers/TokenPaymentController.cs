@@ -21,12 +21,21 @@ namespace MatePayApiService.Controllers
             _paymentClient = paymentClient;
         }
 
-        // GET: TokenPaymentController
-        // public ActionResult Issue()
-        // {
-        //     return View();
-        // }
+        [HttpPost]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(typeof(TokenPaymentResults), StatusCodes.Status403Forbidden)]
+        public ActionResult<TokenPaymentResults> Process(NewTokenPaymentInput requestData)
+        {
+            TokenPaymentResults result = _paymentClient.ProcessTokenPayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
-        
+            ObjectResult response = new ObjectResult(result);
+            //response.StatusCode = (int)result.ResolveHttpStatusCode();
+            return response;
+        }
+
+
     }
 }

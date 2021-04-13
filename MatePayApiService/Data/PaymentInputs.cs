@@ -64,4 +64,29 @@ namespace MatePayApiService.Data
         [Required]
         public string EncryptedRegistrationParams{ get; set; }
     }
+
+    public class NewTokenPaymentInput
+    {
+        [Required]
+        public string StoreId{ get; set; }
+        [Required]
+        public string OrderNumber{ get; set; }
+        [Required]
+        public string ProductName{ get; set; }
+        [Required]
+        public string ConsumerUid{ get; set; }
+        [Required]
+        public string ConsumerName{ get; set; }
+        [Required]
+        public string ConsumerEmail{ get; set; }
+        [Required]
+        public string ConsumerPhoneNumber{ get; set; }
+        [Required]
+        public string CardInstallPeriod{ get; set; }
+        [Required]
+        public string PaymentToken{ get; set; }
+        [Required]
+        public string PaymentAmount{ get; set; }
+    }
+
 }

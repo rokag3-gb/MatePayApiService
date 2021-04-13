@@ -22,15 +22,9 @@ namespace MatePayApiService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TokenPaymentResult> Issue(IssuePaymentTokenInput requestData)
+        public ActionResult<TokenPaymentResults> Issue(IssuePaymentTokenInput requestData)
         {
-            TokenPaymentResult result = _paymentClient.IssuePaymentToken(
-                requestData.StoreId, 
-                requestData.OrderNumber, 
-                requestData.TraceNumber, 
-                requestData.SessionKey, 
-                requestData.EncryptedRegistrationParams,
-                HttpContext.Connection.RemoteIpAddress.ToString());
+            TokenPaymentResults result = _paymentClient.IssuePaymentToken(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
             // response.StatusCode = (int) result.ResolveHttpStatusCode();
