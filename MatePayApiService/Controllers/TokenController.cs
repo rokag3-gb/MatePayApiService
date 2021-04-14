@@ -33,7 +33,7 @@ namespace MatePayApiService.Controllers
             TokenPaymentResults result = _paymentClient.IssuePaymentToken(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
-            // response.StatusCode = (int) result.ResolveHttpStatusCode();
+            response.StatusCode = (int) result.ResolveHttpStatusCode();
             return response;
         }
 

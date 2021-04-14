@@ -38,7 +38,7 @@ namespace MatePayApiService.Controllers
             TokenPaymentResults result = _paymentClient.ProcessTokenPayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
-            //response.StatusCode = (int)result.ResolveHttpStatusCode();
+            response.StatusCode = (int)result.ResolveHttpStatusCode();
             return response;
         }
 
@@ -57,7 +57,7 @@ namespace MatePayApiService.Controllers
             TokenPaymentResults result = _paymentClient.CancelTokenPayment(requestData, HttpContext.Connection.RemoteIpAddress.ToString());
 
             ObjectResult response = new ObjectResult(result);
-            //response.StatusCode = (int)result.ResolveHttpStatusCode();
+            response.StatusCode = (int)result.ResolveHttpStatusCode();
             return response;
         }
     }

@@ -238,6 +238,53 @@ namespace MatePayApiService.Data
             PaymentCanceledAt = Easypay.EP_CLI_COM__get_value("canc_date");
             RefundScheduledAt = Easypay.EP_CLI_COM__get_value("refund_date");
         }
+
+        static TokenPaymentResults()
+        {
+            ResultCodeToHttpStatusCodeMap = new Dictionary<string, HttpStatusCode>();
+            string[] OkCode = { "0000" };
+            foreach (var item in OkCode)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.OK);
+            }
+
+            string[] BadRequestCodes = {
+                "W002", "W101", "W102", "W103", "W104", "W105", "W106", "W107", "W108", "W109", "W110", "W111", "W112", "W113",
+                "W114", "W115", "W116", "W117", "W118", "W119", "W120", "W121", "W122", "W123", "W140", "W141", "W142", "W143",
+                "W150", "W151", "W152", "W153", "W154", "W155", "W156", "W157", "W158", "W159", "W170", "W171", "W172", "W201", 
+                "W210", "W211", "W212", "W213", "W214", "W215", "W216", "W217", "W270", "W302", "W311", "W312", "W313", "W314",
+                "W321", "W322", "W342", "W361"
+            };
+            foreach (var item in BadRequestCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.BadRequest);
+            }
+
+            string[] UnauthorizedCodes = { "W230", "W231", "W301", "W324", "W344", "W401" };
+            foreach (var item in UnauthorizedCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.Unauthorized);
+            }
+
+            string[] ForbiddenCodes = { "W001", "W341" };
+            foreach (var item in ForbiddenCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.Forbidden);
+            }
+
+            string[] InternalServerErrorCodes = {
+                "M101", "M102", "M103", "M104", "M201", "M202", "M203", "M204", "W200", "W240", "W250", "W251", "W252", "W253", "W254",
+                "W255", "W256", "W303", "W304", "W305", "W323", "W343", "W345", "W351", "W352", "W501", "W601"
+            };
+            foreach (var item in InternalServerErrorCodes)
+            {
+                ResultCodeToHttpStatusCodeMap.Add(item, HttpStatusCode.InternalServerError);
+            }
+        }
+        public HttpStatusCode ResolveHttpStatusCode()
+        {
+            return TokenPaymentResults.ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
+        }
     }
 
     public class Utils{
