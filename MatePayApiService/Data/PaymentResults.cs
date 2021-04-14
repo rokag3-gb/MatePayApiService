@@ -145,7 +145,7 @@ namespace MatePayApiService.Data
         }
         public HttpStatusCode ResolveHttpStatusCode()
         {
-            return OneTimePaymentResults.ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
+            return ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
         }
     }
 
@@ -283,13 +283,13 @@ namespace MatePayApiService.Data
         }
         public HttpStatusCode ResolveHttpStatusCode()
         {
-            return TokenPaymentResults.ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
+            return ResultCodeToHttpStatusCodeMap.GetValueOrDefault(this.ResultCode, HttpStatusCode.InternalServerError);
         }
     }
 
     public class Utils{
         public static bool YNToBool(string yn){
-            return yn.Equals("Y");
+            return String.IsNullOrEmpty(yn)? false : yn.Equals("Y");
         }
     }
 }
